@@ -1,0 +1,112 @@
+
+:root {
+    --color-primary: #ff3064;
+    --color-primary-light: #FF3366;
+    --color-primary-dark: #BA265D;
+    --grey-light-1: #faf9f9;
+    --grey-light-2: #f4f2f2;
+    --grey-light-3: #f0eeee;
+    --grey-light-4: #ccc;
+    --grey-dark-1: #333;
+    --grey-dark-2: #777;
+    --grey-dark-3: #999;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+    box-sizing: border-box;
+    font-size: 62.5%;
+}
+
+body {
+    font-family: "Raleway", sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    background-image: linear-gradient(to right bottom, var(--color-primary-light), var(--color-primary-dark));
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    position: relative;
+}
+
+.header {
+
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--grey-dark-1);
+    height: 10rem;
+    padding: 1rem;
+    flex-wrap: wrap;
+}
+
+.navbar h1 a,
+.navbar h1 a:link,
+.navbar h1 a:visited {
+    text-decoration: none;
+    text-transform: capitalize;
+    font-size: 4rem;
+    font-weight: 300;
+    color: #f0eeee;
+}
+
+.logo-image {
+    /*font-weight: 100;*/
+    color: linear-gradient(to right bottom, var(--color-primary-light), var(--color-primary-dark));
+    margin-right: 1rem;
+    margin-left: 1rem;
+    font-size: 3.5rem;
+}
+
+.navbar ul {
+    list-style: none;
+    color: #f0eeee;
+    display: flex;
+    text-transform: uppercase;
+    margin-right: 1rem;
+}
+
+.navbar ul li a,
+.navbar ul li a:link,
+.navbar ul li a:visited {
+    text-decoration: none;
+    color: #f0eeee;
+    margin: 0 1.3rem;
+    font-size: 1.7rem;
+}
+
+main {
+    min-height: 100vh;
+}
+
+footer {
+    width: 100%;
+    min-height: 8rem;
+    background-color:var(--grey-dark-1);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.site-info{
+    font-size: 1.8rem;
+    color: #f0eeee;
+}
+main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+}

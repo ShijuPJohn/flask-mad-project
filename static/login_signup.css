@@ -1,0 +1,85 @@
+.login-box {
+    min-width: 50vw;
+    height: 50vh;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, .5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.login-text-box{
+    font-size: 3rem;
+    font-weight: 500;
+    color: #545454;
+    padding: 0 .3rem;
+    border-bottom: solid;
+    border-color: #9d9d9d;
+    margin-bottom: 1rem;
+}
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    /*height: 100%;*/
+}
+
+.input-text {
+    width: 80%;
+    min-height: 4rem;
+    margin: 1rem .5rem;
+    padding: 1rem;
+    font-size: 2rem;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: rgb(245, 143, 168);
+    border-style: solid;
+    outline: none;
+}
+
+.input-text:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    /*border-width: 3px;*/
+}
+
+.form .btn,
+.form .btn:hover {
+    height: 4rem;
+    width: 10rem;
+    text-transform: uppercase;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: var(--color-primary);
+    border-style: solid;
+    background: rgb(245, 143, 168);
+    outline: none;
+    color: #464646;
+    margin-top: 5px;
+    cursor: pointer;
+}
+.or-box{
+    font-size: 1.3rem;
+    width: 70%;
+    height: .3rem;
+    background-color: #9d9d9d;
+    margin: 2rem 0 1rem 0;
+}
+.create-account-box{
+    font-size: 2rem;
+
+}
+.create-account-box a,
+.create-account-box a:link,
+.create-account-box a:visited
+{
+    /*border-style: solid;*/
+    /*border-color: var(--color-primary);*/
+    /*border-radius: 100px;*/
+    text-decoration: none;
+    color: #333333;
+    padding: .3rem .7rem;
+}

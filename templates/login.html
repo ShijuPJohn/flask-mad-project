@@ -1,0 +1,20 @@
+{% extends "base_template.html" %}
+{% block head %}
+    <title>Login</title>
+    <link rel="stylesheet" href="../static/login_signup.css">
+{% endblock %}
+{% block body %}
+    <div class="login-box">
+    <div class="login-text-box">Login</div>
+        <form class="form">
+            <input type="email" class="input-text" placeholder="Email">
+            <input type="password" class="input-text" placeholder="Password">
+            <input type="submit" class="btn submit">
+        </form>
+    <div class="or-box">
+    </div>
+    <div class="create-account-box">
+        <a href="/signup">Create an account</a>
+    </div>
+    </div>
+{% endblock %}
