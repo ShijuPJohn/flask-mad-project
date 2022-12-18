@@ -1,6 +1,6 @@
 .login-box {
-    min-width: 50vw;
-    height: 50vh;
+    min-width: 40vw;
+    min-height: 50vh;
     background-color: white;
     border-radius: 12px;
     box-shadow: 10px 10px 30px rgba(0, 0, 0, .5);
@@ -8,6 +8,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 1rem 0;
 }
 .login-text-box{
     font-size: 3rem;
@@ -19,11 +20,13 @@
     margin-bottom: 1rem;
 }
 .form {
+    /*background-color: maroon;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
+    margin: 1rem 0;
     /*height: 100%;*/
 }
 
@@ -43,7 +46,6 @@
 .input-text:focus {
     border-color: var(--color-primary);
     outline: none;
-    /*border-width: 3px;*/
 }
 
 .form .btn,
@@ -76,9 +78,6 @@
 .create-account-box a:link,
 .create-account-box a:visited
 {
-    /*border-style: solid;*/
-    /*border-color: var(--color-primary);*/
-    /*border-radius: 100px;*/
     text-decoration: none;
     color: #333333;
     padding: .3rem .7rem;
