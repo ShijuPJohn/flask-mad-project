@@ -1,6 +1,6 @@
 .login-box {
     min-width: 30vw;
-    min-height: 50vh;
+    min-height: 55vh;
     background-color: white;
     border-radius: 12px;
     box-shadow: 10px 10px 30px rgba(0, 0, 0, .5);
@@ -20,14 +20,12 @@
     margin-bottom: 1rem;
 }
 .form {
-    /*background-color: maroon;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin: 2rem 0;
-    /*height: 100%;*/
+    margin: 1.5rem 0;
 }
 
 .input-text {
