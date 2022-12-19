@@ -1,18 +1,26 @@
+import os
+
 from flask import Flask, render_template
 
-app = Flask(__name__)
+from config.config import ProductionConfig, LocalDevelopmentConfig
+from models.models import db
 
 
-@app.route('/')
-@app.route('/login')
-def login_get():  # put controllers's code here
-    return render_template('login.html')
+def create_app():
+    app = Flask(__name__, template_folder="templates")
+    if os.getenv('ENV', "development") == "production":
+        app.config.from_object(ProductionConfig)
+    else:
+        app.config.from_object(LocalDevelopmentConfig)
+    db.init_app(app)
+    app.app_context().push()
+    return app
 
 
-@app.route('/signup')
-def signup_get():  # put controllers's code here
-    return render_template('signup.html')
+app = create_app()
 
+db.create_all()
+from controllers.controllers import *
 
 if __name__ == '__main__':
     app.run(debug=True)

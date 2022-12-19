@@ -35,8 +35,8 @@
     padding: 1rem;
     font-size: 1.5rem;
     border-radius: 5px;
-    border-width: 2px;
-    border-color: rgb(245, 143, 168);
+    border-width: 1px;
+    border-color: #a97d96;
     border-style: solid;
     outline: none;
 }
@@ -52,7 +52,7 @@
     width: 10rem;
     text-transform: uppercase;
     border-radius: 5px;
-    border-width: 2px;
+    border-width: 1px;
     border-color: var(--color-primary);
     border-style: solid;
     background: rgb(245, 143, 168);
@@ -77,6 +77,6 @@
 .create-account-box a:visited
 {
     text-decoration: none;
-    color: #333333;
+    color: deeppink;
     padding: .3rem .7rem;
 }
