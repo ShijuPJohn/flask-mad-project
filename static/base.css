@@ -59,13 +59,16 @@ body {
     font-weight: 300;
     color: #f0eeee;
 }
+.logo-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-.logo-image {
-    /*font-weight: 100;*/
-    color: linear-gradient(to right bottom, var(--color-primary-light), var(--color-primary-dark));
+.logo-img {
     margin-right: 1rem;
     margin-left: 1rem;
-    font-size: 3.5rem;
+    height: 5rem;
 }
 
 .navbar ul {

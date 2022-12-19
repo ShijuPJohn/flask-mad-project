@@ -5,12 +5,12 @@ app = Flask(__name__)
 
 @app.route('/')
 @app.route('/login')
-def login_get():  # put application's code here
+def login_get():  # put controllers's code here
     return render_template('login.html')
 
 
 @app.route('/signup')
-def signup_get():  # put application's code here
+def signup_get():  # put controllers's code here
     return render_template('signup.html')
 
 
