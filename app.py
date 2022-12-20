@@ -18,6 +18,7 @@ def create_app():
 
 
 app = create_app()
+app.config["SECRET_KEY"] = "THIS_IS_MY_SUPER_SECRET"
 
 db.create_all()
 from controllers.controllers import *
