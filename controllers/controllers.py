@@ -26,6 +26,25 @@ def login_get():  # put controllers's code here
     return render_template('login.html')
 
 
+@app.route('/special')
+def special_get():  # put controllers's code here
+    # shiju = User("ShijuPJohn", "spj@email.com", "spjspjspj")
+    # jake = User("JakeJohssn", "jakesdfds@email.com", "spjspjspj2dfsd")
+    # db.session.add(shiju)
+    # db.session.add(jake)
+    # db.session.commit()
+    # shiju.follows.append(jake)
+    # db.session.add(shiju)
+    # db.session.commit()
+    shiju = User.query.filter(User.username == "ShijuPJohn")[0]
+    jake = User.query.filter(User.username == "JakeJohssn")[0]
+
+    print(shiju.follows)
+    print(jake.followers)
+
+    return render_template('login.html')
+
+
 @app.route('/signup', methods=["GET"])
 def signup_get():
     form = SignupForm()

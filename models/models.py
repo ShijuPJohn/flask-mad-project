@@ -4,7 +4,7 @@ db = SQLAlchemy()
 
 follows_followedby = db.Table("follows_followedby",
                               db.Column("user", db.Integer, db.ForeignKey("user.id")),
-                              db.Column("user", db.Integer, db.ForeignKey("user.id"))
+                              db.Column("follows", db.Integer, db.ForeignKey("user.id"))
                               )
 
 
@@ -14,7 +14,17 @@ class User(db.Model):
     username = db.Column(db.String, unique=True)
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String, unique=True)
-    follows = db.relationship("User", secondary=follows_followedby, backref="user")
+    follows = db.relationship("User", secondary=follows_followedby,
+                              primaryjoin=follows_followedby.c.user == id,
+                              secondaryjoin=follows_followedby.c.follows == id,
+                              backref="User")
+
+    followers = db.relationship("User", secondary=follows_followedby,
+                                primaryjoin=follows_followedby.c.follows == id,
+                                secondaryjoin=follows_followedby.c.user == id,
+                                viewonly
+                                =True)
+
     # articles = db.relationship("Post", backref="article")
 
     def __init__(self, username, email, password):
@@ -24,7 +34,6 @@ class User(db.Model):
 
     def __str__(self):
         return "User object" + self.email
-
 
 # class Post(db.Model):
 #     __tablename__ = "article"
