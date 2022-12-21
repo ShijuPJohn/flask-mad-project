@@ -56,17 +56,13 @@ def login_get():
 
 @app.route('/login', methods=["POST"])
 def login_post():
-    print("Method called")
     form = LoginForm()
-    print(form)
     if form.validate_on_submit():
         user = User.query.filter(User.email == form.email.data).first()
-        print(user)
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
                 return redirect("/dashboard")
-
     return render_template('login_error.html')
 
 
@@ -91,7 +87,6 @@ def signup_post():
         new_user = User(form.name.data, form.email.data, hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        print(new_user)
         return "<h1>" + "user created with id" + str(new_user.id) + "</h1>"
     return "<h1>Error</h1>"
 
