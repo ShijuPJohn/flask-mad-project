@@ -42,6 +42,12 @@ class PostForm(FlaskForm):
 
 
 @app.route('/', methods=["GET"])
+def index_get():
+    if current_user.is_authenticated:
+        return redirect("/dashboard")
+    return redirect("/login")
+
+
 @app.route('/login', methods=["GET"])
 def login_get():
     form = LoginForm()
@@ -95,60 +101,3 @@ def signup_post():
 def logout_get():
     logout_user()
     return redirect("/login")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
-# @app.route('/special')
-# def special_get():  # put controllers's code here
-#     shiju = User("ShijuPJohn", "spj@email.com", "spjspjspj")
-#     jake = User("JakeJohssn", "jakesdfds@email.com", "spjspjspj2dfsd")
-#     db.session.add(shiju)
-#     db.session.add(jake)
-#     db.session.commit()
-#     shiju.follows.append(jake)
-#     db.session.add(shiju)
-#     db.session.commit()
-#     shiju = User.query.filter(User.username == "ShijuPJohn")[0]
-#     jake = User.query.filter(User.username == "JakeJohssn")[0]
-#
-#     print(shiju.follows)
-#     print(jake.followers)
-#
-#     return render_template('login.html')
-#
-#
-# @app.route('/special2')
-# def special2_get():
-#     # form = PostForm()
-#     # author = User.query.filter(User.username == "shiju").first()
-#     post = Post(title="Sample Post4", description="lorem ipsum lorem ipsum",
-#                 imageUrl="https://cdn4.vectorstock.com/i/1000x1000/79/63/round-icon-program-code-structure-html-vector-28707963.jpg",
-#                 author=1)
-#     print(post)
-#     db.session.add(post)
-#     db.session.commit()
-#
-#     return render_template('login.html')
-#
-#
-# @app.route('/special3')
-# def special3_get():
-#     shiju = User.query.filter(User.id == 1).first()
-#     print(shiju)
-#     print(shiju.articles[0].title)
-#     return render_template('login.html')
