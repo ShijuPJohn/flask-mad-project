@@ -6,9 +6,10 @@
 {% block body %}
     <div class="login-box">
         <div class="login-text-box">Login</div>
-        <form class="form">
-            <input type="email" class="input-text" placeholder="Email">
-            <input type="password" class="input-text" placeholder="Password">
+        <form class="form" method="post" action="/login">
+            {{ form.hidden_tag() }}
+            {{ form.email(class_="input-text") }}
+            {{ form.password(class_="input-text") }}
             <input type="submit" class="btn submit">
         </form>
         <div class="or-box">

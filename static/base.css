@@ -115,3 +115,17 @@ main{
     min-height: 90vh;
     padding-bottom: 8rem;
 }
+.nav-icon{
+    height:3rem;
+    margin-right: .5rem;
+}
+.icon-box{
+    margin: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logout-icon{
+    margin-top: .5rem;
+    height: 2.3rem;
+}

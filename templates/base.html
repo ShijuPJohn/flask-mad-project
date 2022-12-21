@@ -17,14 +17,31 @@
     <nav class="navbar">
         <h1><a href="/" class="logo-box">
             <img src="../static/logo.png" alt="logo" class="logo-img"> TheDevNetwork</a></h1>
-        <ul>
-            <li><a href="#">Search</a></li>
-            <li><a href="#">My Profile</a></li>
-            <li><a href="#">Logout</a></li>
-        </ul>
+        {% if current_user.is_authenticated %}
+            <ul>
+                <li><a href="#">
+                    <div class="icon-box">
+                        <img src="../static/search.png" alt="search" class="nav-icon search-icon">
+                    </div>
+                </a></li>
+
+                <li><a href="#">
+                    <div class="icon-box">
+                        <img src="../static/people.png" alt="dashboard" class="nav-icon people-icon">
+                    </div>
+                </a></li>
+
+                <li><a href="/logout">
+                    <div class="icon-box">
+                        <img src="../static/logout.png" alt="logout" class="nav-icon logout-icon">
+                    </div>
+                </a></li>
+            </ul>
+        {% endif %}
     </nav>
 </header>
 <main>
+
     {% block body %}
     {% endblock %}
 </main>

@@ -1,4 +1,6 @@
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import DateTime, func
 
 db = SQLAlchemy()
 
@@ -8,7 +10,7 @@ follows_followedby = db.Table("follows_followedby",
                               )
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String, unique=True)
@@ -25,7 +27,7 @@ class User(db.Model):
                                 viewonly
                                 =True)
 
-    # articles = db.relationship("Post", backref="article")
+    articles = db.relationship("Post", backref="article")
 
     def __init__(self, username, email, password):
         self.username = username
@@ -35,17 +37,16 @@ class User(db.Model):
     def __str__(self):
         return "User object" + self.email
 
-# class Post(db.Model):
-#     __tablename__ = "article"
-#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     title = db.Column(db.String)
-#     description = db.Column(db.String)
-#     imageUrl = db.Column(db.String)
-#     timeStamp = db.Column(db.DateTime)
-#     author = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-#
-#
-# class ArticleAuthors(db.Model):
-#     __tablename__ = "article_authors"
-#     article_id = db.Column(db.Integer, db.ForeignKey("article.article_id"), primary_key=True, nullable=False, )
-#     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True, nullable=False, )
+
+class Post(db.Model):
+    __tablename__ = "article"
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    title = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=True)
+    imageUrl = db.Column(db.String, nullable=True)
+    time_created = db.Column(DateTime(timezone=True), server_default=func.now())
+    time_updated = db.Column(DateTime(timezone=True), onupdate=func.now())
+    author = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    def __str__(self):
+        return "Post with title : " + self.title
