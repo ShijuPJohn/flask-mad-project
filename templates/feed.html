@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>Posts</title>
+    <link rel="stylesheet" href="../static/feed.css">
+{% endblock %}
+{% block body %}
+    <h1>Posts of {{ user.username }}</h1>
+    <h2>{{ posts[0].title }}</h2>
+    <img src="/static/uploads/{{ posts[0].imageUrl }}" alt="post image" class="feed-image">
+{% endblock %}

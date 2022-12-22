@@ -39,7 +39,7 @@ class User(UserMixin, db.Model):
 
 
 class Post(db.Model):
-    __tablename__ = "article"
+    __tablename__ = "post"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=True)

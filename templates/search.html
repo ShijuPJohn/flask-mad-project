@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>Search Users</title>
+    <link rel="stylesheet" href="../static/search.css">
+{% endblock %}
+{% block body %}
+    <input type="text" placeholder="Type the name of the user to search">
+    <button>Submit</button>
+      {{ current_user.follows }}
+    {% for user in users %}
+        <div class="user-card">
+            <h1>{{ user.username }}</h1>
+            <h2>{{ user.email }}</h2>
+            <button id="follow-btn" onclick="followAlert()">
+                {% if user in current_user.follows %}
+                Unfollow
+                {% else %}
+                Follow
+                {% endif %}
+            </button>
+        </div>
+    {% endfor %}
+    <script src="../static/search_page.js"></script>
+{% endblock %}

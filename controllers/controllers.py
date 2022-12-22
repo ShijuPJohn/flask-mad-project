@@ -1,8 +1,12 @@
+import os
+
 from flask import render_template, redirect
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileRequired
 from werkzeug.security import generate_password_hash, check_password_hash
-from wtforms import StringField, EmailField, PasswordField
+from werkzeug.utils import secure_filename
+from wtforms import StringField, EmailField, PasswordField, FileField
 from wtforms.validators import InputRequired, Length
 
 from app import app
@@ -35,10 +39,7 @@ class PostForm(FlaskForm):
                         render_kw={"placeholder": "Title"})
     description = StringField("description", validators=[InputRequired(), Length(min=8)],
                               render_kw={"placeholder": "Description"})
-    imageUrl = StringField("imageUrl",
-                           render_kw={"placeholder": "Image URL"})
-    authorName = StringField("authorName", validators=[InputRequired()],
-                             render_kw={"placeholder": "Image URL"})
+    imageUrl = FileField(validators=[FileRequired()])
 
 
 @app.route('/', methods=["GET"])
@@ -87,7 +88,8 @@ def signup_post():
         new_user = User(form.name.data, form.email.data, hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        return "<h1>" + "user created with id" + str(new_user.id) + "</h1>"
+        login_user(new_user)
+        return redirect("/dashboard")
     return "<h1>Error</h1>"
 
 
@@ -96,3 +98,68 @@ def signup_post():
 def logout_get():
     logout_user()
     return redirect("/login")
+
+
+@app.route('/create-post', methods=["GET"])
+@login_required
+def create_post_get():
+    form = PostForm()
+    return render_template("create-post.html", form=form)
+
+
+@app.route('/create-post', methods=["POST"])
+@login_required
+def create_post_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        image = form.imageUrl.data
+        s_filename = secure_filename(image.filename)
+        image.save(os.path.join(app.config['UPLOAD_FOLDER'], s_filename))
+        post = Post(title=form.title.data,
+                    description=form.description.data,
+                    imageUrl=image.filename,
+                    author=current_user.id
+                    )
+        db.session.add(post)
+        db.session.commit()
+
+    return "<h1> Post created</h1>"
+
+
+@app.route('/my-posts', methods=["GET"])
+@login_required
+def my_posts_get():
+    uid = current_user.id
+    posts = Post.query.filter(Post.author == uid)
+    print(posts)
+    return render_template("feed.html", user=current_user, posts=posts)
+
+
+@app.route('/feed', methods=["GET"])
+@login_required
+def feed_get():
+    uid = current_user.id
+    ownposts = Post.query.filter(Post.author == uid)
+    followees_posts = []
+    followees = User.query.filter(User.id == uid).first().follows
+    print(followees)
+    print(ownposts)
+    return render_template("feed.html", user=current_user, posts=ownposts)
+
+
+@app.route('/search', methods=["GET"])
+@login_required
+def search_get():
+    users = User.query.all()
+    return render_template("search.html", users=users)
+
+
+@app.route('/test1', methods=["GET"])
+def test1_get():
+    shiju = User.query.filter(User.id == 1).first()
+    jake = User.query.filter(User.id == 2).first()
+    shiju.follows.append(jake)
+    db.session.add(shiju)
+    db.session.commit()
+    print(shiju.follows)
+    return "Hello"
