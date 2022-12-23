@@ -32,14 +32,14 @@ class SignupForm(FlaskForm):
     name = StringField("name", validators=[InputRequired(), Length(min=8, max=64)], render_kw={"placeholder": "Name"})
     password = PasswordField("password", validators=[InputRequired(), Length(min=8, max=100)],
                              render_kw={"placeholder": "Password"})
-
+    imageUrl = FileField()
 
 class PostForm(FlaskForm):
     title = StringField("title", validators=[InputRequired()],
                         render_kw={"placeholder": "Title"})
     description = StringField("description", validators=[InputRequired(), Length(min=8)],
                               render_kw={"placeholder": "Description"})
-    imageUrl = FileField(validators=[FileRequired()])
+    imageUrl = FileField()
 
 
 @app.route('/', methods=["GET"])
@@ -85,7 +85,7 @@ def signup_post():
     form = SignupForm()
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method="sha256")
-        new_user = User(form.name.data, form.email.data, hashed_password)
+        new_user = User(username=form.name.data, email=form.email.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
@@ -163,3 +163,26 @@ def test1_get():
     db.session.commit()
     print(shiju.follows)
     return "Hello"
+
+
+@app.route('/follow-unfollow/<uid>', methods=["GET"])
+@login_required
+def follow_unfollow_get(uid):
+    required_user = User.query.filter(User.id == uid).first()
+    if required_user in current_user.follows:
+        current_user.follows.remove(required_user)
+        db.session.add(current_user)
+        db.session.commit()
+        return "<h1>Unfollowed</h1>"
+    else:
+        print("else part worked")
+        current_user.follows.append(required_user)
+        db.session.add(current_user)
+        db.session.commit()
+        return "<h1>followed</h1>"
+
+
+@app.route('/test', methods=["GET"])
+def testroute_get():
+    print(current_user.follows)
+    return "<h1>Test Route Success</h1>"

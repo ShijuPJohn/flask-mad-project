@@ -6,18 +6,18 @@
 {% block body %}
     <input type="text" placeholder="Type the name of the user to search">
     <button>Submit</button>
-      {{ current_user.follows }}
+    {{ current_user.follows }}
     {% for user in users %}
         <div class="user-card">
             <h1>{{ user.username }}</h1>
             <h2>{{ user.email }}</h2>
-            <button id="follow-btn" onclick="followAlert()">
+            <a href="/follow-unfollow/{{ user.id }}">
                 {% if user in current_user.follows %}
-                Unfollow
+                    Unfollow
                 {% else %}
-                Follow
+                    Follow
                 {% endif %}
-            </button>
+            </a>
         </div>
     {% endfor %}
     <script src="../static/search_page.js"></script>
