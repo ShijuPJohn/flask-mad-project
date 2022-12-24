@@ -6,13 +6,13 @@
 {% block body %}
     <div class="login-box">
         <div class="login-text-box">Sign Up</div>
-        <form class="form" method="post" action="/signup">
+        <form class="form" method="post" action="/signup" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             {{ form.name(class_="input-text") }}
             {{ form.email(class_="input-text") }}
             {{ form.password(class_="input-text") }}
-            {#            <input type="password" class="input-text" placeholder="Confirm Password">#}
-            <input type="submit" class="btn submit">
+            {{ form.imageUrl }}
+           <input type="submit" class="btn submit">
         </form>
         <div class="or-box">
         </div>

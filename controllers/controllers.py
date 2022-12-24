@@ -3,7 +3,6 @@ import os
 from flask import render_template, redirect
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileRequired
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from wtforms import StringField, EmailField, PasswordField, FileField
@@ -33,6 +32,7 @@ class SignupForm(FlaskForm):
     password = PasswordField("password", validators=[InputRequired(), Length(min=8, max=100)],
                              render_kw={"placeholder": "Password"})
     imageUrl = FileField()
+
 
 class PostForm(FlaskForm):
     title = StringField("title", validators=[InputRequired()],
@@ -87,6 +87,16 @@ def signup_post():
         hashed_password = generate_password_hash(form.password.data, method="sha256")
         new_user = User(username=form.name.data, email=form.email.data, password=hashed_password)
         db.session.add(new_user)
+        db.session.flush()
+        if form.imageUrl.data:
+            image = form.imageUrl.data
+            print(image)
+            filename = image.filename
+            f_extension = filename[filename.rfind('.') + 1:]
+            s_filename = secure_filename(str(new_user.id) + '.' + f_extension)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'] + "user_thumbs", s_filename))
+            new_user.imageUrl = app.config['UPLOAD_FOLDER'] + "user_thumbs/" + s_filename
+            db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
         return redirect("/dashboard")
@@ -112,14 +122,18 @@ def create_post_get():
 def create_post_post():
     form = PostForm()
     if form.validate_on_submit():
-        image = form.imageUrl.data
-        s_filename = secure_filename(image.filename)
-        image.save(os.path.join(app.config['UPLOAD_FOLDER'], s_filename))
         post = Post(title=form.title.data,
                     description=form.description.data,
-                    imageUrl=image.filename,
                     author=current_user.id
                     )
+        db.session.add(post)
+        db.session.flush()
+        image = form.imageUrl.data
+        filename = image.filename
+        f_extension = filename[filename.rfind('.') + 1:]
+        s_filename = secure_filename(str(post.id) + '.' + f_extension)
+        image.save(os.path.join(app.config['UPLOAD_FOLDER'] + "post_thumbs", s_filename))
+        post.imageUrl = app.config['UPLOAD_FOLDER'] + "post_thumbs/" + s_filename
         db.session.add(post)
         db.session.commit()
 
@@ -150,19 +164,9 @@ def feed_get():
 @app.route('/search', methods=["GET"])
 @login_required
 def search_get():
-    users = User.query.all()
+    users = filter(lambda a: a.id != current_user.id, User.query.all())
+
     return render_template("search.html", users=users)
-
-
-@app.route('/test1', methods=["GET"])
-def test1_get():
-    shiju = User.query.filter(User.id == 1).first()
-    jake = User.query.filter(User.id == 2).first()
-    shiju.follows.append(jake)
-    db.session.add(shiju)
-    db.session.commit()
-    print(shiju.follows)
-    return "Hello"
 
 
 @app.route('/follow-unfollow/<uid>', methods=["GET"])
@@ -180,9 +184,3 @@ def follow_unfollow_get(uid):
         db.session.add(current_user)
         db.session.commit()
         return "<h1>followed</h1>"
-
-
-@app.route('/test', methods=["GET"])
-def testroute_get():
-    print(current_user.follows)
-    return "<h1>Test Route Success</h1>"

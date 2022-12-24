@@ -16,7 +16,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String, unique=True)
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String, unique=True)
-    imageUrl = db.Column(db.String, nullable=True, defult="pro_img1.png")
+    imageUrl = db.Column(db.String, nullable=True, default="static/uploads/user_thumbs/pro_img1.png")
     follows = db.relationship("User", secondary=follows_followedby,
                               primaryjoin=follows_followedby.c.user == id,
                               secondaryjoin=follows_followedby.c.follows == id,

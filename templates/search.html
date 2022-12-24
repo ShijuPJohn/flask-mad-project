@@ -9,9 +9,10 @@
     {{ current_user.follows }}
     {% for user in users %}
         <div class="user-card">
+            <img src="{{ user.imageUrl }}" alt="profile pic" class="profile-pic">
             <h1>{{ user.username }}</h1>
             <h2>{{ user.email }}</h2>
-            <a href="/follow-unfollow/{{ user.id }}">
+            <a href="/follow-unfollow/{{ user.id }}" >
                 {% if user in current_user.follows %}
                     Unfollow
                 {% else %}
