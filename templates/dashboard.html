@@ -4,7 +4,46 @@
     <link rel="stylesheet" href="../static/dashboard.css">
 {% endblock %}
 {% block body %}
-    <h1>Hi</h1>
-    <img src="{{ user.imageUrl }}" alt="user image" class="profile-pic">
-    <h2>{{ user.username }}</h2>
+    <div class="root-container">
+        <div class="top-banner">
+            <div class="welcome-box">
+                <img src="{{ user.imageUrl }}" alt="user image" class="profile-pic">
+                <div class="welcome-text-box">
+                    <h2>Welcome</h2>
+                    <h2>{{ user.username }}</h2>
+                </div>
+            </div>
+            <div class="count-box">
+                <span class="count-text">Total Posts</span>
+                <span class="count-number"> {{ user.articles|length }}</span>
+            </div>
+            <div class="count-box">
+                <span class="count-text">Followed</span>
+                <span class="count-number"> {{ user.articles|length }}</span>
+            </div>
+            <div class="count-box">
+                <span class="count-text">Followed By</span>
+                <span class="count-number"> {{ user.articles|length }}</span>
+            </div>
+        </div>
+        <div class="posts-section-container">
+            <h2 class="subtitle">
+                My Posts:
+            </h2>
+            <div class="post-container">
+                {% if user.articles is defined and user.articles|length > 0 %}
+                    {% for post in user.articles %}
+                        <div class="post-thumb-box">
+                            <img src="{{ post.imageUrl }}" alt="post">
+                            <h2>{{ post.title }}</h2>
+                            <p>{{ post.description }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <h2>No posts to show</h2>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

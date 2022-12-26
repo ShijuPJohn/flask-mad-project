@@ -128,13 +128,14 @@ def create_post_post():
                     )
         db.session.add(post)
         db.session.flush()
-        image = form.imageUrl.data
-        filename = image.filename
-        f_extension = filename[filename.rfind('.') + 1:]
-        s_filename = secure_filename(str(post.id) + '.' + f_extension)
-        image.save(os.path.join(app.config['UPLOAD_FOLDER'] + "post_thumbs", s_filename))
-        post.imageUrl = app.config['UPLOAD_FOLDER'] + "post_thumbs/" + s_filename
-        db.session.add(post)
+        if form.imageUrl.data:
+            image = form.imageUrl.data
+            filename = image.filename
+            f_extension = filename[filename.rfind('.') + 1:]
+            s_filename = secure_filename(str(post.id) + '.' + f_extension)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'] + "post_thumbs", s_filename))
+            post.imageUrl = app.config['UPLOAD_FOLDER'] + "post_thumbs/" + s_filename
+            db.session.add(post)
         db.session.commit()
 
     return "<h1> Post created</h1>"

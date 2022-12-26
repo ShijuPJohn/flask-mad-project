@@ -39,15 +39,27 @@ class User(UserMixin, db.Model):
         return "User object" + self.email
 
 
+class Comment(db.Model):
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    comment = db.Column(db.String, nullable=False)
+    author = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    post = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+
+    def __str__(self):
+        return "Comment with content: " + self.comment
+
+
 class Post(db.Model):
     __tablename__ = "post"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=True)
-    imageUrl = db.Column(db.String, nullable=True)
+    imageUrl = db.Column(db.String, nullable=True, default="static/uploads/post_thumbs/default_post.png")
     time_created = db.Column(DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(DateTime(timezone=True), onupdate=func.now())
     author = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    likes = db.Column(db.Integer, default=0, nullable=False)
+    comments = db.relationship("Comment", backref="Comment")
 
     def __str__(self):
         return "Post with title : " + self.title
