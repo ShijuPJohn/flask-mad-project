@@ -1,3 +1,143 @@
-.feed-image{
-    height: 20rem;
+.root-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    min-height: 100vh;
+    margin: 1rem 0;
+    padding: 1rem 2rem;
+    min-width: 90vw;
+    border-radius: 10px;
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, .2);
+}
+
+.post-card-full-container {
+    display: flex;
+    flex-direction: column;
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    height: 25rem;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 10px;
+    margin: 1rem 0;
+    padding: 1rem;
+    border-color: #dedede;
+    box-shadow: 5px 5px 10px 1px rgba(0, 0, 0, .15);
+    width: 80%;
+}
+
+.horizontal-line {
+    /*width: 100%;*/
+    width: 100%;
+    height: .2rem;
+    background-color: #dedede;
+    margin: 1rem auto;
+}
+
+.post-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.post-card-own-flag {
+    background-color: #5658e0;
+    padding: .5rem 1rem;
+    font-size: 1.2rem;
+    color: whitesmoke;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.post-card-image-container {
+    height: 17rem;
+    width: 17rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.post-card-image {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    /*max-height: 10%;*/
+}
+
+.post-card-text-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    margin-left: 2rem;
+}
+
+.post-card-text-box h2 {
+    font-size: 2.5rem;
+    color: var(--grey-dark-1);
+}
+
+.post-card-text-box p {
+    font-size: 1.5rem;
+    max-width: 60rem;
+    /*background-color: teal;*/
+}
+
+.post-card-text-box :nth-child(3) {
+    color: #5658e0;
+}
+.post-card-text-box :nth-child(4) {
+    color: green;
+    font-family: sans-serif;
+}
+.post-card-own-flag {
+    margin-left: auto;
+}
+
+.post-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.number-likes-box {
+    margin: 0 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.number-likes-box p {
+    font-size: 2rem;
+    color: #919191;
+    border-radius: 100px;
+    left: 100%;
+    margin-left: .5rem;
+}
+
+.number-comments-box {
+    margin: 0 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.number-comments-box p {
+    font-size: 2rem;
+    color: #919191;
+    left: 110%;
+    margin-left: .5rem;
+}
+
+.number-likes-box img {
+    height: 2rem;
+
+}
+
+.number-comments-box img {
+    height: 2rem;
 }

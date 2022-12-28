@@ -1,10 +1,43 @@
 {% extends "base.html" %}
 {% block head %}
-    <title>Posts</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="../static/feed.css">
 {% endblock %}
 {% block body %}
-    <h1>Posts of {{ user.username }}</h1>
-    <h2>{{ posts[0].title }}</h2>
-    <img src="/static/uploads/{{ posts[0].imageUrl }}" alt="post image" class="feed-image">
+    <div class="root-container">
+        {% if posts is defined and posts|length>0 %}
+            {% for post in posts %}
+                <div class="post-card-full-container">
+                    <div class="post-card">
+                        <div class="post-card-image-container">
+                            <img src="{{ post.imageUrl }}" alt="" class="post-card-image">
+                        </div>
+                        <div class="post-card-text-box">
+                            <h2>{{ post.title }}</h2>
+                            <p>{{ post.description[:100] }}...</p>
+                            <p>{{ post.author.username }}</p>
+                            <p>{{ time_obj[post.id] }}</p>
+                        </div>
+                        {% if post.author==current_user %}
+                            <p class="post-card-own-flag">OWN</p>
+                        {% endif %}
+                    </div>
+                    <div class="horizontal-line"></div>
+                    <div class="post-card-footer">
+                        <div class="number-likes-box">
+                            <img src="../static/love_inactive.png" alt="loves">
+                            <p>{{ post.likes }}</p>
+                        </div>
+                        <div class="number-comments-box">
+                            <img src="../static/comments_icon.png" alt="loves">
+                            <p>{{ post.comments|length }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h1> No Posts to show</h1>
+        {% endif %}
+    </div>
+
 {% endblock %}

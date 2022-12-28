@@ -129,3 +129,8 @@ main{
     margin-top: .5rem;
     height: 2.3rem;
 }
+a,
+a:link,
+a:visited{
+    text-decoration: none;
+}

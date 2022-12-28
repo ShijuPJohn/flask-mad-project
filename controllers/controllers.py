@@ -45,7 +45,7 @@ class PostForm(FlaskForm):
 @app.route('/', methods=["GET"])
 def index_get():
     if current_user.is_authenticated:
-        return redirect("/dashboard")
+        return redirect("/feed")
     return redirect("/login")
 
 
@@ -124,7 +124,7 @@ def create_post_post():
     if form.validate_on_submit():
         post = Post(title=form.title.data,
                     description=form.description.data,
-                    author=current_user.id
+                    author=current_user
                     )
         db.session.add(post)
         db.session.flush()
@@ -154,12 +154,15 @@ def my_posts_get():
 @login_required
 def feed_get():
     uid = current_user.id
-    ownposts = Post.query.filter(Post.author == uid)
-    followees_posts = []
-    followees = User.query.filter(User.id == uid).first().follows
-    print(followees)
-    print(ownposts)
-    return render_template("feed.html", user=current_user, posts=ownposts)
+    followees = current_user.follows
+    followees_ids = [i.id for i in followees]
+    followees_ids.append(uid)
+    posts_display = Post.query.filter(Post.author_id.in_(followees_ids)).all()
+    time_obj = {}
+    for post in posts_display:
+        time_obj[post.id] = post.time_created.strftime("%d-%B-%Y, %I:%M %p")
+
+    return render_template("feed.html", posts=posts_display, time_obj=time_obj)
 
 
 @app.route('/search', methods=["GET"])

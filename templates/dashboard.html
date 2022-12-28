@@ -13,36 +13,51 @@
                     <h2>{{ user.username }}</h2>
                 </div>
             </div>
-            <div class="count-box">
-                <span class="count-text">Total Posts</span>
-                <span class="count-number"> {{ user.articles|length }}</span>
-            </div>
-            <div class="count-box">
-                <span class="count-text">Followed</span>
-                <span class="count-number"> {{ user.articles|length }}</span>
-            </div>
-            <div class="count-box">
-                <span class="count-text">Followed By</span>
-                <span class="count-number"> {{ user.articles|length }}</span>
-            </div>
+            <a href="/all-posts">
+                <div class="count-box">
+                    <span class="count-text">Total Posts</span>
+                    <span class="count-number"> {{ user.articles|length }}</span>
+                </div>
+            </a>
+
+            <a href="/followees">
+                <div class="count-box">
+                    <span class="count-text">Followed</span>
+                    <span class="count-number"> {{ user.follows|length }}</span>
+                </div>
+            </a>
+            <a href="/followers">
+                <div class="count-box">
+                    <span class="count-text">Followed By</span>
+                    <span class="count-number"> {{ user.followers|length }}</span>
+                </div>
+            </a>
         </div>
+
+
         <div class="posts-section-container">
             <h2 class="subtitle">
                 My Posts:
             </h2>
+
             <div class="post-container">
                 {% if user.articles is defined and user.articles|length > 0 %}
                     {% for post in user.articles %}
-                        <div class="post-thumb-box">
-                            <img src="{{ post.imageUrl }}" alt="post">
-                            <h2>{{ post.title }}</h2>
-                            <p>{{ post.description }}</p>
-                        </div>
+                        <a href="/post/{{ post.id }}">
+                            <div class="post-thumb-box">
+                                <div class="post-thumb-image-container">
+                                    <img src="{{ post.imageUrl }}" alt="post">
+                                </div>
+                                <h2>{{ post.title }}</h2>
+                                <p>{{ post.description[:20] }}....</p>
+                            </div>
+                        </a>
                     {% endfor %}
                 {% else %}
                     <h2>No posts to show</h2>
                 {% endif %}
             </div>
+
         </div>
     </div>
 
