@@ -1,6 +1,6 @@
 import os
 
-from flask import render_template, redirect
+from flask import render_template, redirect, request
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
 from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -166,11 +166,21 @@ def feed_get():
     return render_template("feed.html", posts=posts_display, time_obj=time_obj)
 
 
+# @app.route('/search', methods=["GET"])
+# @login_required
+# def search_get():
+#     users = User.query.filter(User.id != current_user.id).all()
+#     return render_template("search.html", users=users)
+
+
 @app.route('/search', methods=["GET"])
 @login_required
-def search_get():
-    users = filter(lambda a: a.id != current_user.id, User.query.all())
-
+def search_post():
+    if request.args:
+        name = request.args["name"]
+        users = User.query.filter(User.username.startswith(name), User.id!=current_user.id).all()
+        return render_template("search.html", users=users)
+    users = User.query.filter(User.id != current_user.id).all()
     return render_template("search.html", users=users)
 
 

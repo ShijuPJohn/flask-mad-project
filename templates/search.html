@@ -5,25 +5,45 @@
 {% endblock %}
 {% block body %}
     <div class="root-container">
-        <div class="search-box">
-            <input type="text" placeholder="Type the name of the user to search" class="search-text-field">
+        <form class="search-box" action="/search">
+            <input name="name" type="text" placeholder="Type the name of the user to search" class="search-text-field">
             <button class="search-submit-button">search</button>
-        </div>
+        </form>
+        {% if users is defined and users|length>0 %}
+            {% for user in users %}
+                <div class="user-card-full-container">
+                    <div class="user-card-image-container">
+                        <img src="{{ user.imageUrl }}" alt="profile pic" class="user-card-image">
+                    </div>
+                    <div class="user-card-text-box">
+                        <h2>{{ user.username }}</h2>
+                        <p class="user-card-email">{{ user.email }}</p>
+                        <div class="number-posts-followers-block">
+                            <div class="followers-block">
+                                <span>{{ user.followers|length }}</span> -
+                                <span>Followers</span>
+                            </div>
+                            <div class="posts-block">
+                                <span>{{ user.posts|length }}</span> -
+                                <span>Posts</span>
+                            </div>
+                        </div>
 
-        {% for user in users %}
-            <div class="user-card">
-                <img src="{{ user.imageUrl }}" alt="profile pic" class="profile-pic">
-                <h1>{{ user.username }}</h1>
-                <h2>{{ user.email }}</h2>
-                <a href="/follow-unfollow/{{ user.id }}">
-                    {% if user in current_user.follows %}
-                        Unfollow
-                    {% else %}
-                        Follow
-                    {% endif %}
-                </a>
-            </div>
-        {% endfor %}
+                    </div>
+                    <div class="third-row">
+                        <a href="/follow-unfollow/{{ user.id }}">
+                            {% if user in current_user.follows %}
+                                Unfollow
+                            {% else %}
+                                Follow
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h2>There are no users that match your search criteria</h2>
+        {% endif %}
     </div>
     <script src="../static/search_page.js"></script>
 {% endblock %}
