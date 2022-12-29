@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block head %}
     <title>Create Post</title>
-    <link rel="stylesheet" href="../static/login_signup.css">
+    <link rel="stylesheet" href="../static/create-post.css">
 {% endblock %}
 {% block body %}
-    <div class="login-box">
-        <div class="login-text-box">Login</div>
+    <div class="root-container">
+        <div class="title-text-box">Write a post</div>
         <form class="form" method="post" action="/create-post" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             {{ form.title(class_="input-text") }}
             {{ form.description(class_="input-text") }}
-            {{ form.imageUrl }}
+            {{ form.imageUrl(class_="input-file") }}
             <input type="submit" class="btn submit">
         </form>
     </div>

@@ -1,5 +1,5 @@
 .root-container {
-    min-width: 30vw;
+    min-width: 60vw;
     min-height: 55vh;
     background-color: white;
     border-radius: 12px;
@@ -9,6 +9,7 @@
     align-items: center;
     justify-content: center;
     padding: 1rem 0;
+    margin: 1rem;
 }
 .title-text-box{
     font-size: 3rem;
@@ -39,6 +40,9 @@
     border-color: #a97d96;
     border-style: solid;
     outline: none;
+}
+.input-text:nth-child(3){
+    height: 20rem;
 }
 
 .input-text:focus {
@@ -79,4 +83,7 @@
     text-decoration: none;
     color: deeppink;
     padding: .3rem .7rem;
+}
+.input-file{
+    margin: 4rem;
 }

@@ -4,8 +4,8 @@
     <link rel="stylesheet" href="../static/login_signup.css">
 {% endblock %}
 {% block body %}
-    <div class="login-box">
-        <div class="login-text-box">Login</div>
+    <div class="root-container">
+        <div class="title-text-box">Login</div>
         <form class="form" method="post" action="/login">
             {{ form.hidden_tag() }}
             {{ form.email(class_="input-text") }}

@@ -37,7 +37,6 @@ body {
 }
 
 .header {
-
 }
 
 .navbar {
@@ -85,7 +84,7 @@ body {
     text-decoration: none;
     color: #f0eeee;
     margin: 0 1.3rem;
-    font-size: 1.7rem;
+    font-size: 1.4rem;
 }
 
 main {
@@ -116,7 +115,7 @@ main{
     padding-bottom: 8rem;
 }
 .nav-icon{
-    height:3rem;
+    height:2.5rem;
     margin-right: .5rem;
 }
 .icon-box{
@@ -126,8 +125,8 @@ main{
     justify-content: center;
 }
 .logout-icon{
-    margin-top: .5rem;
-    height: 2.3rem;
+    margin-top: .2rem;
+    height: 2rem;
 }
 a,
 a:link,

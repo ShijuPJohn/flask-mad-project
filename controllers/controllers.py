@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from wtforms import StringField, EmailField, PasswordField, FileField
 from wtforms.validators import InputRequired, Length
+from wtforms.widgets import TextArea
 
 from app import app
 from models.models import User, db, Post
@@ -38,7 +39,7 @@ class PostForm(FlaskForm):
     title = StringField("title", validators=[InputRequired()],
                         render_kw={"placeholder": "Title"})
     description = StringField("description", validators=[InputRequired(), Length(min=8)],
-                              render_kw={"placeholder": "Description"})
+                              render_kw={"placeholder": "Description"}, widget=TextArea())
     imageUrl = FileField()
 
 

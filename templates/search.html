@@ -4,22 +4,26 @@
     <link rel="stylesheet" href="../static/search.css">
 {% endblock %}
 {% block body %}
-    <input type="text" placeholder="Type the name of the user to search">
-    <button>Submit</button>
-    {{ current_user.follows }}
-    {% for user in users %}
-        <div class="user-card">
-            <img src="{{ user.imageUrl }}" alt="profile pic" class="profile-pic">
-            <h1>{{ user.username }}</h1>
-            <h2>{{ user.email }}</h2>
-            <a href="/follow-unfollow/{{ user.id }}" >
-                {% if user in current_user.follows %}
-                    Unfollow
-                {% else %}
-                    Follow
-                {% endif %}
-            </a>
+    <div class="root-container">
+        <div class="search-box">
+            <input type="text" placeholder="Type the name of the user to search" class="search-text-field">
+            <button class="search-submit-button">search</button>
         </div>
-    {% endfor %}
+
+        {% for user in users %}
+            <div class="user-card">
+                <img src="{{ user.imageUrl }}" alt="profile pic" class="profile-pic">
+                <h1>{{ user.username }}</h1>
+                <h2>{{ user.email }}</h2>
+                <a href="/follow-unfollow/{{ user.id }}">
+                    {% if user in current_user.follows %}
+                        Unfollow
+                    {% else %}
+                        Follow
+                    {% endif %}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
     <script src="../static/search_page.js"></script>
 {% endblock %}
