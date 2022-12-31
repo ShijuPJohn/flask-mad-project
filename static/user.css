@@ -1,0 +1,141 @@
+.root-container {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    min-height: 100vh;
+    margin: 1rem 0;
+    padding: 0 2rem;
+    min-width: 90vw;
+    border-radius: 10px;
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, .2);
+}
+
+.top-banner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 20rem;
+    width: 100%;
+    padding: 0 1rem;
+}
+
+.welcome-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 10px;
+    border-color: #dedede;
+    height: 15rem;
+    margin: 1rem;
+    padding: 1rem 3rem;
+}
+
+.welcome-text-box {
+    margin-left: 1rem;
+}
+
+.welcome-text-box :first-child{
+    font-size: 3rem;
+    color: var(--grey-dark-1);
+}
+
+.profile-pic {
+    height: 10rem;
+}
+
+.count-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 10px;
+    border-color: #dedede;
+    height: 15rem;
+    margin: 1rem;
+    padding: 1rem 3rem;
+}
+
+.count-number {
+    font-size: 4rem;
+    font-weight: 500;
+    color: #5658e0;
+}
+
+.count-text {
+    font-size: 2rem;
+    margin-left: 1rem;
+    margin-top: 1rem;
+    color: var(--grey-dark-1);
+}
+
+.subtitle {
+    /*margin-left: 2rem;*/
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--grey-dark-1);
+}
+
+.posts-section-container {
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #dedede;
+    margin: 1rem 2rem;
+    padding: 2rem;
+}
+
+.post-container a,
+.post-container a:visited,
+.post-container a:link {
+    text-decoration: none;
+    color: var(--grey-dark-1);
+}
+
+.post-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.post-thumb-box {
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #dedede;
+    box-shadow: 5px 5px 10px 1px rgba(0, 0, 0, .15);
+    width: 25rem;
+    height: 30rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: .5rem;
+    margin:1rem;
+}
+
+.post-thumb-box img {
+    width: 85%;
+}
+
+.post-thumb-box h2 {
+    font-size: 2.3rem;
+    font-weight: 600;
+}
+
+.post-thumb-box p {
+    font-size: 1.5rem;
+    color: var(--grey-dark-1);
+}
+.post-thumb-image-container{
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

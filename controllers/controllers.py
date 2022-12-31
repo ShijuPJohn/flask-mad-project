@@ -178,7 +178,7 @@ def feed_get():
 def search_post():
     if request.args:
         name = request.args["name"]
-        users = User.query.filter(User.username.startswith(name), User.id!=current_user.id).all()
+        users = User.query.filter(User.username.startswith(name), User.id != current_user.id).all()
         return render_template("search.html", users=users)
     users = User.query.filter(User.id != current_user.id).all()
     return render_template("search.html", users=users)
@@ -199,3 +199,67 @@ def follow_unfollow_get(uid):
         db.session.add(current_user)
         db.session.commit()
         return "<h1>followed</h1>"
+
+
+@app.route('/users/<followers_followees>', methods=["GET"])
+@login_required
+def users_get(followers_followees):
+    if followers_followees == "followers":
+        users = current_user.followers
+    elif followers_followees == "followees":
+        users = current_user.follows
+    else:
+        return render_template("not_found.html")
+    return render_template("users.html", users=users)
+
+
+@app.route('/user/<uid>', methods=["GET"])
+@login_required
+def user_get(uid):
+    if int(uid) == current_user.id:
+        return redirect("/dashboard")
+    user = User.query.filter(User.id == uid).first()
+    return render_template("user.html", user=user)
+
+
+@app.route('/all-posts', methods=["GET"])
+@login_required
+def all_posts_get():
+    time_obj = {}
+    for post in current_user.posts:
+        time_obj[post.id] = post.time_created.strftime("%d-%B-%Y, %I:%M %p")
+    return render_template("all-posts.html", time_obj=time_obj)
+
+
+@app.route('/delete-post/<pid>', methods=["GET"])
+@login_required
+def delete_post_get(pid):
+    post = Post.query.filter(Post.id == pid).first()
+    if post:
+        if post.author_id == current_user.id:
+            Post.query.filter(Post.id == pid).delete()
+            db.session.commit()
+            return render_template("message.html", message_title="Delete Successful",
+                                   message_body="Post deleted successfully",
+                                   message_action_link="/all-posts",
+                                   message_action_message="Go back"
+                                   )
+        return render_template("message.html", message_title="Not Authorized",
+                               message_body="You can't delete other user's posts",
+                               message_action_link="/all-posts",
+                               message_action_message="Go back"
+                               )
+    return render_template("message.html", message_title="Not Found",
+                           message_body="No posts found with this ID",
+                           message_action_link="/all-posts",
+                           message_action_message="Go back"
+                           )
+
+
+@app.route('/post/<pid>', methods=["GET"])
+@login_required
+def post_details_get(pid):
+    post = Post.query.filter(Post.id == int(pid)).first()
+    time = post.time_created.strftime("%d-%B-%Y, %I:%M %p")
+    print(post)
+    return render_template("post_details.html", post=post, time=time)

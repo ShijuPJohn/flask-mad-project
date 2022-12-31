@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../static/post.css">
+{% endblock %}
+{% block body %}
+    <div class="root-container">
+        <h1 class="post-title">{{ post.title }}</h1>
+        <p class="timestamp">{{ post.author.username }} | {{ time }}</p>
+        <div class="post-body-container">
+            <div class="post-body-item descr-img-block">
+{#                <h1>post image and descriptions block</h1>#}
+                <img src="/{{ post.imageUrl }}" alt="post image" class="post-image">
+                <p class="post-description">{{ post.description }}</p>
+            </div>
+            <div class="post-body-item comment-block">
+                <h2 class="comment-section-title">Comments</h2>
+            </div>
+        </div>
+    </div>
+{% endblock %}

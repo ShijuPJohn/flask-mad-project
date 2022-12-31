@@ -5,15 +5,11 @@
 {% endblock %}
 {% block body %}
     <div class="root-container">
-        <form class="search-box" action="/search">
-            <input name="name" type="text" placeholder="Type the name of the user to search" class="search-text-field">
-            <button class="search-submit-button">search</button>
-        </form>
         {% if users is defined and users|length>0 %}
             {% for user in users %}
                 <div class="user-card-full-container">
                     <div class="user-card-image-container">
-                        <img src="{{ user.imageUrl }}" alt="profile pic" class="user-card-image">
+                        <img src="/{{ user.imageUrl }}" alt="profile pic" class="user-card-image">
                     </div>
                     <div class="user-card-text-box">
                         <h2>{{ user.username }}</h2>

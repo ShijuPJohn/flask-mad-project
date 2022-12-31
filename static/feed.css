@@ -60,6 +60,13 @@
 
 }
 
+.post-link,
+.post-link:visited,
+.post-link:link {
+text-decoration: none;
+    color: var(--grey-dark-1);
+}
+
 .post-card-image {
     max-height: 100%;
     max-width: 100%;
@@ -107,14 +114,14 @@
     justify-content: center;
 }
 
-.number-likes-box {
+.icon-box {
     margin: 0 4rem;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.number-likes-box p {
+.icon-box p {
     font-size: 2rem;
     color: #919191;
     border-radius: 100px;
@@ -122,26 +129,9 @@
     margin-left: .5rem;
 }
 
-.number-comments-box {
-    margin: 0 4rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-
-.number-comments-box p {
-    font-size: 2rem;
-    color: #919191;
-    left: 110%;
-    margin-left: .5rem;
-}
-
-.number-likes-box img {
+.icon-box img {
     height: 2rem;
-
 }
-
-.number-comments-box img {
-    height: 2rem;
+.author-link{
+    color: #4d4db0;
 }

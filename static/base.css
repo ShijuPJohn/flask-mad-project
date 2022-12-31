@@ -118,7 +118,7 @@ main{
     height:2.5rem;
     margin-right: .5rem;
 }
-.icon-box{
+.navbar-icon-box{
     margin: 0 1rem;
     display: flex;
     align-items: center;

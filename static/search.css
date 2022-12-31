@@ -132,15 +132,20 @@
 .third-row a,
 .third-row a:link,
 .third-row a:visited {
-    background-color: #5658e0;
     color: whitesmoke;
-    padding: .5rem 1rem;
+    padding: .8rem 1.4rem;
     border-radius: 5px;
-}
-.third-row a:hover{
-    background-color: #8283d3;
+    font-size: 1.6rem;
 }
 
+
+.follow-btn {
+    background-color: #4f9b4f;
+}
+
+.unfollow-btn {
+    background-color: #b2667d;
+}
 
 .third-row :first-child {
     font-size: 1.5rem;

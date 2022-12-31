@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>{{ message_title }}</title>
+    <link rel="stylesheet" href="../static/login_signup.css">
+{% endblock %}
+{% block body %}
+    <div class="message-body">
+        {{ message_body }}
+    </div>
+    <div class="message-action">
+        <a href="{{ message_action_link }}">{{ message_action_message }}</a>
+    </div>
+{% endblock %}

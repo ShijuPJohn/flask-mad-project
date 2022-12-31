@@ -5,24 +5,22 @@
 {% endblock %}
 {% block body %}
     <div class="root-container">
-        {% if posts is defined and posts|length>0 %}
-            {% for post in posts %}
+        {% if current_user.posts is defined and current_user.posts|length>0 %}
+            {% for post in current_user.posts %}
                 <div class="post-card-full-container">
                     <div class="post-card">
                         <div class="post-card-image-container">
-                            <a href="/post/{{ post.id }}" class="post-link"><img src="{{ post.imageUrl }}" alt=""
-                                                                                 class="post-card-image"></a>
+                            <img src="{{ post.imageUrl }}" alt="" class="post-card-image">
                         </div>
                         <div class="post-card-text-box">
-                            <h2><a href="/post/{{ post.id }}" class="post-link">{{ post.title }}</a></h2>
+                            <h2>{{ post.title }}</h2>
                             <p>{{ post.description[:100] }}...</p>
-                            <p><a href="/user/{{ post.author.id }}" class="author-link">{{ post.author.username }}</a>
-                            </p>
+                            <p>{{ post.author.username }}</p>
                             <p>{{ time_obj[post.id] }}</p>
                         </div>
-                        {% if post.author==current_user %}
-                            <p class="post-card-own-flag">OWN</p>
-                        {% endif %}
+{#                        {% if post.author==current_user %}#}
+{#                            <p class="post-card-own-flag">OWN</p>#}
+{#                        {% endif %}#}
                     </div>
                     <div class="horizontal-line"></div>
                     <div class="post-card-footer">
@@ -33,6 +31,16 @@
                         <div class="icon-box number-comments-box">
                             <img src="../static/comments_icon.png" alt="loves">
                             <p>{{ post.comments|length }}</p>
+                        </div>
+                        <div class="icon-box delete-icon-box">
+                            <a href="/delete-post/{{ post.id }}">
+                                <img src="../static/delete_icon.png" alt="delete post">
+                            </a>
+                        </div>
+                        <div class="icon-box edit-icon-box">
+                            <a href="/edit-post/{{ post.id }}">
+                                <img src="../static/edit_icon.png" alt="edit post">
+                            </a>
                         </div>
                     </div>
                 </div>

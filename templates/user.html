@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% block head %}
     <title>Dashboard</title>
-    <link rel="stylesheet" href="../static/dashboard.css">
+    <link rel="stylesheet" href="../static/user.css">
 {% endblock %}
 {% block body %}
     <div class="root-container">
         <div class="top-banner">
             <div class="welcome-box">
-                <img src="{{ user.imageUrl }}" alt="user image" class="profile-pic">
+                <img src="/{{ user.imageUrl }}" alt="user image" class="profile-pic">
                 <div class="welcome-text-box">
-                    <h2>Welcome</h2>
                     <h2>{{ user.username }}</h2>
                 </div>
             </div>
@@ -20,13 +19,13 @@
                 </div>
             </a>
 
-            <a href="/users/followees">
+            <a href="/followees">
                 <div class="count-box">
                     <span class="count-text">Followed</span>
                     <span class="count-number"> {{ user.follows|length }}</span>
                 </div>
             </a>
-            <a href="/users/followers">
+            <a href="/followers">
                 <div class="count-box">
                     <span class="count-text">Followed By</span>
                     <span class="count-number"> {{ user.followers|length }}</span>
@@ -36,9 +35,9 @@
 
 
         <div class="posts-section-container">
-            <a href="/all-posts"><h2 class="subtitle">
-                My Posts:
-            </h2></a>
+            <h2 class="subtitle">
+                {{ user.username }}'s Posts:
+            </h2>
 
             <div class="post-container">
                 {% if user.posts is defined and user.posts|length > 0 %}
@@ -46,7 +45,7 @@
                         <a href="/post/{{ post.id }}">
                             <div class="post-thumb-box">
                                 <div class="post-thumb-image-container">
-                                    <img src="{{ post.imageUrl }}" alt="post">
+                                    <img src="/{{ post.imageUrl }}" alt="post">
                                 </div>
                                 <h2>{{ post.title }}</h2>
                                 <p>{{ post.description[:20] }}....</p>
@@ -57,8 +56,6 @@
                     <h2>No posts to show</h2>
                 {% endif %}
             </div>
-
         </div>
     </div>
-
 {% endblock %}
