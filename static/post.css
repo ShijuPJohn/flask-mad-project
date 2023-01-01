@@ -32,18 +32,24 @@
 .post-body-item {
     border-style: solid;
     border-width: 1px;
-    border-radius: 5px;
-    border-color: #dedede;
+    /*border-radius: 5px;*/
+    border-color: #cecdcd;
+}
+
+.post-body-item:first-child,
+.post-body-item:nth-child(2) {
+    border-bottom: none;
 }
 
 .descr-img-block,
-.comment-block{
+.comment-block {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-.descr-img-block{
+
+.descr-img-block {
     object-fit: cover;
 }
 
@@ -60,4 +66,21 @@
     font-size: 1.8rem;
     padding: 1rem 4rem;
     text-indent: 4rem;
+    line-height: 1.6;
+}
+.likes-block{
+    height: 8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+.love-icon{
+    height: 50%;
+}
+.love-text{
+    margin-left: .5rem;
+    font-size: 3.5rem;
+    color: #a1a1a1;
+    margin-bottom: .3rem;
 }

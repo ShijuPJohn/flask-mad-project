@@ -9,9 +9,13 @@
         <p class="timestamp">{{ post.author.username }} | {{ time }}</p>
         <div class="post-body-container">
             <div class="post-body-item descr-img-block">
-{#                <h1>post image and descriptions block</h1>#}
+                {#                <h1>post image and descriptions block</h1>#}
                 <img src="/{{ post.imageUrl }}" alt="post image" class="post-image">
                 <p class="post-description">{{ post.description }}</p>
+            </div>
+            <div class="post-body-item likes-block">
+                <img src="../static/love_inactive.png" alt="loves"  class="love-icon">
+                <p class="love-text">{{ post.likes }}</p>
             </div>
             <div class="post-body-item comment-block">
                 <h2 class="comment-section-title">Comments</h2>

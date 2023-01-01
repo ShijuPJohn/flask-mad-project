@@ -43,6 +43,10 @@ class PostForm(FlaskForm):
     imageUrl = FileField()
 
 
+class CommentForm(FlaskForm):
+    pass
+
+
 @app.route('/', methods=["GET"])
 def index_get():
     if current_user.is_authenticated:

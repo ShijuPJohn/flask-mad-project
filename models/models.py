@@ -8,6 +8,14 @@ follows_followedby = db.Table("follows_followedby",
                               db.Column("user", db.Integer, db.ForeignKey("user.id")),
                               db.Column("follows", db.Integer, db.ForeignKey("user.id"))
                               )
+post_likes = db.Table("post_likedby",
+                      db.Column("post", db.Integer, db.ForeignKey("post.id")),
+                      db.Column("user", db.Integer, db.ForeignKey("user.id"))
+                      )
+comment_likes = db.Table("comment_likedby",
+                         db.Column("post", db.Integer, db.ForeignKey("post.id")),
+                         db.Column("user", db.Integer, db.ForeignKey("user.id"))
+                         )
 
 
 class User(UserMixin, db.Model):
@@ -61,6 +69,7 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     likes = db.Column(db.Integer, default=0, nullable=False)
     comments = db.relationship("Comment", backref="Post")
+    likedby = db.relationship("User", secondary=post_likes)
 
     def __str__(self):
         return "Post with title : " + self.title
