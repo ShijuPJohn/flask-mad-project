@@ -267,3 +267,13 @@ def post_details_get(pid):
     time = post.time_created.strftime("%d-%B-%Y, %I:%M %p")
     print(post)
     return render_template("post_details.html", post=post, time=time)
+
+
+@app.route('/likepost/<pid>', methods=["GET"])
+@login_required
+def like_post_get(pid):
+    post = Post.query.filter(Post.id == int(pid)).first()
+    post.liked_users.append(current_user)
+    db.session.add(post)
+    db.session.commit()
+    return "<h1>Liked Success</h1>"

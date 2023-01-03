@@ -8,18 +8,17 @@ follows_followedby = db.Table("follows_followedby",
                               db.Column("user", db.Integer, db.ForeignKey("user.id")),
                               db.Column("follows", db.Integer, db.ForeignKey("user.id"))
                               )
-post_likes = db.Table("post_likedby",
-                      db.Column("post", db.Integer, db.ForeignKey("post.id")),
-                      db.Column("user", db.Integer, db.ForeignKey("user.id"))
+post_likes = db.Table("post_likes",
+                      db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
+                      db.Column("user_id", db.Integer, db.ForeignKey("user.id"))
                       )
-comment_likes = db.Table("comment_likedby",
-                         db.Column("post", db.Integer, db.ForeignKey("post.id")),
-                         db.Column("user", db.Integer, db.ForeignKey("user.id"))
+comment_likes = db.Table("comment_likes",
+                         db.Column("post_id", db.Integer, db.ForeignKey("comment.id")),
+                         db.Column("user_id", db.Integer, db.ForeignKey("user.id"))
                          )
 
 
 class User(UserMixin, db.Model):
-    __tablename__ = "user"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String, unique=True)
     email = db.Column(db.String, unique=True)
@@ -38,6 +37,8 @@ class User(UserMixin, db.Model):
 
     posts = db.relationship("Post", backref="author")
     comments = db.relationship("Comment", backref="author")
+    liked_posts = db.relationship("Post", secondary=post_likes,  backref="liked_users")
+    liked_comments = db.relationship("Comment", secondary=comment_likes,  backref="liked_users")
 
     def __init__(self, username, email, password):
         self.username = username
@@ -59,7 +60,6 @@ class Comment(db.Model):
 
 
 class Post(db.Model):
-    __tablename__ = "post"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=True)
@@ -67,9 +67,7 @@ class Post(db.Model):
     time_created = db.Column(DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(DateTime(timezone=True), onupdate=func.now())
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    likes = db.Column(db.Integer, default=0, nullable=False)
     comments = db.relationship("Comment", backref="Post")
-    likedby = db.relationship("User", secondary=post_likes)
 
     def __str__(self):
         return "Post with title : " + self.title
