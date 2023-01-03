@@ -26,10 +26,16 @@
                     </div>
                     <div class="horizontal-line"></div>
                     <div class="post-card-footer">
-                        <div class="icon-box number-likes-box">
-                            <img src="../static/love_inactive.png" alt="loves">
-                            <p >{{ post.likes }}</p>
-                        </div>
+                        <a href="/like_dislike_post/{{ post.id }}">
+                            <div class="icon-box number-likes-box">
+                                {% if current_user in post.liked_users %}
+                                    <img src="../static/love_active.png" alt="love icon inactive" class="love-icon">
+                                {% else %}
+                                    <img src="../static/love_inactive.png" alt="love icon inactive" class="love-icon">
+                                {% endif %}
+                                <p>{{ post.liked_users|length }}</p>
+                            </div>
+                        </a>
                         <div class="icon-box number-comments-box">
                             <img src="../static/comments_icon.png" alt="loves">
                             <p>{{ post.comments|length }}</p>

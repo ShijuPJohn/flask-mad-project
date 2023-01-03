@@ -10,7 +10,7 @@ from wtforms.validators import InputRequired, Length
 from wtforms.widgets import TextArea
 
 from app import app
-from models.models import User, db, Post
+from models.models import User, db, Post, Comment
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -44,7 +44,8 @@ class PostForm(FlaskForm):
 
 
 class CommentForm(FlaskForm):
-    pass
+    comment = StringField("comment", validators=[InputRequired()], render_kw={"placeholder": "Comment"},
+                          widget=TextArea())
 
 
 @app.route('/', methods=["GET"])
@@ -265,15 +266,35 @@ def delete_post_get(pid):
 def post_details_get(pid):
     post = Post.query.filter(Post.id == int(pid)).first()
     time = post.time_created.strftime("%d-%B-%Y, %I:%M %p")
-    print(post)
-    return render_template("post_details.html", post=post, time=time)
+    form = CommentForm()
+    comment_time_obj = {}
+    for comment in post.comments:
+        comment_time_obj[comment.id] = comment.time_created.strftime("%d-%B-%Y, %I:%M %p")
+    return render_template("post_details.html", post=post, time=time, form=form, comment_time_obj=comment_time_obj)
 
 
-@app.route('/likepost/<pid>', methods=["GET"])
+@app.route('/like_dislike_post/<pid>', methods=["GET"])
 @login_required
 def like_post_get(pid):
     post = Post.query.filter(Post.id == int(pid)).first()
-    post.liked_users.append(current_user)
-    db.session.add(post)
-    db.session.commit()
-    return "<h1>Liked Success</h1>"
+    if current_user in post.liked_users:
+        post.liked_users.remove(current_user)
+        db.session.add(post)
+        db.session.commit()
+        return "<h1>Unliked the Post</h1>"
+    else:
+        post.liked_users.append(current_user)
+        db.session.add(post)
+        db.session.commit()
+        return "<h1>Liked the Post</h1>"
+
+
+@app.route('/create_comment/<pid>', methods=["POST"])
+@login_required
+def create_comment_post(pid):
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(comment=form.comment.data, author_id=current_user.id, post_id=int(pid))
+        db.session.add(comment)
+        db.session.commit()
+        return "<h1>Added the comment</h1>"

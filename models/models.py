@@ -24,21 +24,15 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String, unique=True)
     imageUrl = db.Column(db.String, nullable=True, default="static/uploads/user_thumbs/pro_img1.png")
+    time_created = db.Column(DateTime(timezone=True), server_default=func.now())
     follows = db.relationship("User", secondary=follows_followedby,
                               primaryjoin=follows_followedby.c.user == id,
                               secondaryjoin=follows_followedby.c.follows == id,
-                              backref="User")
-
-    followers = db.relationship("User", secondary=follows_followedby,
-                                primaryjoin=follows_followedby.c.follows == id,
-                                secondaryjoin=follows_followedby.c.user == id,
-                                viewonly
-                                =True)
-
+                              backref="followers")
     posts = db.relationship("Post", backref="author")
     comments = db.relationship("Comment", backref="author")
-    liked_posts = db.relationship("Post", secondary=post_likes,  backref="liked_users")
-    liked_comments = db.relationship("Comment", secondary=comment_likes,  backref="liked_users")
+    liked_posts = db.relationship("Post", secondary=post_likes, backref="liked_users")
+    liked_comments = db.relationship("Comment", secondary=comment_likes, backref="liked_users")
 
     def __init__(self, username, email, password):
         self.username = username
@@ -54,6 +48,8 @@ class Comment(db.Model):
     comment = db.Column(db.String, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+    time_created = db.Column(DateTime(timezone=True), server_default=func.now())
+    time_updated = db.Column(DateTime(timezone=True), onupdate=func.now())
 
     def __str__(self):
         return "Comment with content: " + self.comment

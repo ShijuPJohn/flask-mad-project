@@ -9,16 +9,49 @@
         <p class="timestamp">{{ post.author.username }} | {{ time }}</p>
         <div class="post-body-container">
             <div class="post-body-item descr-img-block">
-                {#                <h1>post image and descriptions block</h1>#}
+                {# <h1>post image and descriptions block</h1>#}
                 <img src="/{{ post.imageUrl }}" alt="post image" class="post-image">
                 <p class="post-description">{{ post.description }}</p>
             </div>
-            <div class="post-body-item likes-block">
-                <img src="../static/love_inactive.png" alt="loves"  class="love-icon">
-                <p class="love-text">{{ post.likes }}</p>
-            </div>
+            <a href="/like_dislike_post/{{ post.id }}">
+                <div class="post-body-item likes-block">
+
+                    {% if current_user in post.liked_users %}
+                        <img src="../static/love_active.png" alt="love icon inactive" class="love-icon">
+                    {% else %}
+                        <img src="../static/love_inactive.png" alt="love icon inactive" class="love-icon">
+                    {% endif %}
+                    <p class="love-text">{{ post.liked_users|length }}</p>
+                </div>
+            </a>
             <div class="post-body-item comment-block">
-                <h2 class="comment-section-title">Comments</h2>
+                <h2 class="comment-add-title">Add a comment</h2>
+                <div class="comment-add-box">
+                    <img src="/{{ current_user.imageUrl }}" alt="" class="comment-add-box-thumb">
+                    <form class="comment-form" method="post"
+                          action="/create_comment/{{ post.id }}"
+                          enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        {{ form.comment(class_="comment-input-field") }}<br>
+                        <button type="submit" class="comment-submit-btn"> Post Comment</button>
+                    </form>
+                </div>
+                <h3 class="comment-list-section-title">{{ post.comments|length }} Comments</h3>
+                <div class="comment-list-block">
+                    {% for comment in post.comments %}
+                        <div class="comment-list-card">
+                            <div class="comment-list-image-container">
+                                <img src="/{{ comment.author.imageUrl }}" alt="commented user">
+                            </div>
+                            <div class="comment-list-text-block">
+                                <h3>{{ comment.author.username }}</h3>
+                                <p class="comment-list-text-block-comment">{{ comment.comment }}</p>
+                                <p class="comment-list-text-block-time">{{ comment_time_obj[comment.id] }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
             </div>
         </div>
     </div>
