@@ -5,11 +5,15 @@
 {% endblock %}
 {% block body %}
     <div class="root-container">
+        {% if current_user == post.author %}
+            <a href="/edit-post/{{ post.id }}">
+                <img src="../static/edit_icon.png" alt="post edit" class="edit-icon">
+            </a>
+        {% endif %}
         <h1 class="post-title">{{ post.title }}</h1>
         <p class="timestamp">{{ post.author.username }} | {{ time }}</p>
         <div class="post-body-container">
             <div class="post-body-item descr-img-block">
-                {# <h1>post image and descriptions block</h1>#}
                 <img src="/{{ post.imageUrl }}" alt="post image" class="post-image">
                 <p class="post-description">{{ post.description }}</p>
             </div>
@@ -47,7 +51,24 @@
                                 <h3>{{ comment.author.username }}</h3>
                                 <p class="comment-list-text-block-comment">{{ comment.comment }}</p>
                                 <p class="comment-list-text-block-time">{{ comment_time_obj[comment.id] }}</p>
+                                <a href="/comment-like-unlike/{{ comment.id }}" class="comment-like-unlike-link">
+                                    <div class="comment-like-box">
+                                        {% if current_user in comment.liked_users %}
+                                            <img src="../static/love_active.png" alt="comment like"
+                                                 class="comment-like-icon">
+                                        {% else %}
+                                            <img src="../static/love_inactive.png" alt="comment like"
+                                                 class="comment-like-icon">
+                                        {% endif %}
+                                        <p>{{ comment.liked_users|length }}</p>
+                                    </div>
+                                </a>
                             </div>
+                            {% if current_user == comment.author or current_user==post.author %}
+                                <a href="/comment-delete/{{ comment.id }}" class="comment-delete-btn">
+                                    <img src="../static/delete_icon.png" alt="comment delete">
+                                </a>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>

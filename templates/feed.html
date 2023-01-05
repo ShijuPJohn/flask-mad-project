@@ -20,9 +20,6 @@
                             </p>
                             <p>{{ time_obj[post.id] }}</p>
                         </div>
-                        {% if post.author==current_user %}
-                            <p class="post-card-own-flag">OWN</p>
-                        {% endif %}
                     </div>
                     <div class="horizontal-line"></div>
                     <div class="post-card-footer">
@@ -40,6 +37,18 @@
                             <img src="../static/comments_icon.png" alt="loves">
                             <p>{{ post.comments|length }}</p>
                         </div>
+                        {% if current_user == post.author %}
+                            <div class="icon-box delete-icon-box">
+                                <a href="/delete-post/{{ post.id }}">
+                                    <img src="../static/delete_icon.png" alt="delete post">
+                                </a>
+                            </div>
+                            <div class="icon-box edit-icon-box">
+                                <a href="/edit-post/{{ post.id }}">
+                                    <img src="../static/edit_icon.png" alt="edit post">
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

@@ -122,11 +122,12 @@ text-decoration: none;
 }
 
 .icon-box p {
-    font-size: 2rem;
+    font-size: 1.4rem;
     color: #919191;
     border-radius: 100px;
     left: 100%;
     margin-left: .5rem;
+    font-family: sans-serif;
 }
 
 .icon-box img {

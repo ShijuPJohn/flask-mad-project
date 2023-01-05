@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>Create Post</title>
+    <link rel="stylesheet" href="../static/create-post.css">
+{% endblock %}
+{% block body %}
+    <div class="root-container">
+        <div class="title-text-box">Edit Post</div>
+        <form class="form" method="post" action="/edit-post/{{ post.id }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            {{ form.title(class_="input-text") }}
+            {{ form.description(class_="input-text") }}
+            {{ form.imageUrl(class_="input-file") }}
+            <span class="use-same-image-box">{{ form.is_same_image }} Use the same image?</span>
+            <input type="submit" class="btn submit">
+        </form>
+    </div>
+{% endblock %}

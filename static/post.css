@@ -9,6 +9,14 @@
     width: 70vw;
     border-radius: 10px;
     box-shadow: 10px 10px 30px rgba(0, 0, 0, .2);
+    position: relative;
+}
+
+.edit-icon {
+    height: 3rem;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
 }
 
 .post-title {
@@ -125,22 +133,26 @@
     border-color: #cecdcd;
     border-style: solid;
     border-width: 1px;
+    padding: 1rem;
 }
 
 .comment-input-field:focus {
     border-color: var(--color-primary);
 }
-.comment-submit-btn{
+
+.comment-submit-btn {
     padding: 1rem;
 }
-.comment-list-block{
+
+.comment-list-block {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 1rem 0;
 }
-.comment-list-section-title{
+
+.comment-list-section-title {
     font-family: sans-serif;
     font-size: 2.4rem;
     font-weight: 300;
@@ -154,7 +166,7 @@
     border-width: 1px;
     border-color: #cecdcd;
     border-radius: 5px;
-    width: 90%;
+    width: 100%;
     margin: 1rem 0;
     display: flex;
     justify-content: flex-start;
@@ -167,27 +179,65 @@
     /*height: 10rem;*/
     border-style: solid;
     border-width: 1px;
-    border-color: #cecdcd ;
+    border-color: #cecdcd;
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.comment-list-image-container img{
+
+.comment-list-image-container img {
     width: 95%;
 }
-.comment-list-text-block{
+
+.comment-list-text-block {
     margin-left: 1rem;
     width: 70%;
 }
-.comment-list-text-block h3{
+
+.comment-list-text-block h3 {
     font-size: 1.8rem;
 }
-.comment-list-text-block-comment{
-     font-size: 1.5rem;
+
+.comment-list-text-block-comment {
+    font-size: 1.5rem;
 }
-.comment-list-text-block-time{
+
+.comment-list-text-block-time {
     font-size: 1rem;
     font-family: sans-serif;
     color: #808080;
+}
+
+.comment-like-icon {
+    height: 2rem;
+    /*margin: 1.5rem 2rem;*/
+}
+
+.comment-like-box {
+    display: flex;
+    /*background-color: teal;*/
+    justify-content: center;
+    align-items: center;
+}
+
+.comment-like-box p {
+    font-size: 1.4rem;
+    margin-left: 1rem;
+}
+
+.comment-like-unlike-link,
+.comment-like-unlike-link:visited,
+.comment-like-unlike-link:link {
+    text-decoration: none;
+    color: grey;
+
+}
+
+.comment-delete-btn {
+    margin: 0 auto;
+}
+
+.comment-delete-btn img {
+    height: 1.5rem;
 }

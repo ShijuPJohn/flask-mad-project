@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="../static/login_signup.css">
+{% endblock %}
+{% block body %}
+    <div class="root-container">
+        <div class="title-text-box">Update Your Details</div>
+        <form class="form" method="post" action="/edit-user" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            {{ form.name(class_="input-text") }}
+            {{ form.password(class_="input-text") }}
+            <span class="use-same-image-box">{{ form.is_same_image }} Use the same image?</span>
+            {{ form.imageUrl }}
+           <input type="submit" class="btn submit">
+        </form>
+    </div>
+{% endblock %}

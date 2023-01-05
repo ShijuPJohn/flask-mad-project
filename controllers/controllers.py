@@ -5,7 +5,7 @@ from flask_login import LoginManager, login_required, login_user, current_user, 
 from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from wtforms import StringField, EmailField, PasswordField, FileField
+from wtforms import StringField, EmailField, PasswordField, FileField, BooleanField
 from wtforms.validators import InputRequired, Length
 from wtforms.widgets import TextArea
 
@@ -30,8 +30,15 @@ class LoginForm(FlaskForm):
 class SignupForm(FlaskForm):
     email = EmailField("email", validators=[InputRequired()], render_kw={"placeholder": "Email"})
     name = StringField("name", validators=[InputRequired(), Length(min=8, max=64)], render_kw={"placeholder": "Name"})
+    password = PasswordField("password", validators=[InputRequired(), Length(min=8, max=64)])
+    imageUrl = FileField()
+
+
+class UserEditForm(FlaskForm):
+    name = StringField("name", validators=[InputRequired(), Length(min=8, max=64)], render_kw={"placeholder": "Name"})
     password = PasswordField("password", validators=[InputRequired(), Length(min=8, max=100)],
                              render_kw={"placeholder": "Password"})
+    is_same_image = BooleanField('Use the same post image?')
     imageUrl = FileField()
 
 
@@ -40,6 +47,15 @@ class PostForm(FlaskForm):
                         render_kw={"placeholder": "Title"})
     description = StringField("description", validators=[InputRequired(), Length(min=8)],
                               render_kw={"placeholder": "Description"}, widget=TextArea())
+    imageUrl = FileField()
+
+
+class PostEditForm(FlaskForm):
+    title = StringField("title", validators=[InputRequired()],
+                        render_kw={"placeholder": "Title"})
+    description = StringField("description", validators=[InputRequired(), Length(min=8)],
+                              render_kw={"placeholder": "Description"}, widget=TextArea())
+    is_same_image = BooleanField('Use the same post image?')
     imageUrl = FileField()
 
 
@@ -76,8 +92,7 @@ def login_post():
 @app.route('/dashboard', methods=["GET"])
 @login_required
 def dashboard_get():
-    user = current_user
-    return render_template("dashboard.html", user=user)
+    return render_template("dashboard.html", user=current_user)
 
 
 @app.route('/signup', methods=["GET"])
@@ -96,7 +111,6 @@ def signup_post():
         db.session.flush()
         if form.imageUrl.data:
             image = form.imageUrl.data
-            print(image)
             filename = image.filename
             f_extension = filename[filename.rfind('.') + 1:]
             s_filename = secure_filename(str(new_user.id) + '.' + f_extension)
@@ -106,7 +120,11 @@ def signup_post():
         db.session.commit()
         login_user(new_user)
         return redirect("/dashboard")
-    return "<h1>Error</h1>"
+    return render_template("message.html", message_title="Signup Error",
+                           message_body="Data validation error",
+                           message_action_link="/signup",
+                           message_action_message="Go back"
+                           )
 
 
 @app.route('/logout', methods=["GET"])
@@ -144,7 +162,16 @@ def create_post_post():
             db.session.add(post)
         db.session.commit()
 
-    return "<h1> Post created</h1>"
+        return render_template("message.html", message_title="Post Created",
+                               message_body="New Post Created",
+                               message_action_link=f"/post/{post.id}",
+                               message_action_message="See Post"
+                               )
+    return render_template("message.html", message_title="Post Create Error",
+                           message_body="Data Invalid",
+                           message_action_link="/create-post",
+                           message_action_message="Try again"
+                           )
 
 
 @app.route('/my-posts', methods=["GET"])
@@ -197,13 +224,21 @@ def follow_unfollow_get(uid):
         current_user.follows.remove(required_user)
         db.session.add(current_user)
         db.session.commit()
-        return "<h1>Unfollowed</h1>"
+        return render_template("message.html", message_title="Unfollowed",
+                               message_body="Unfollowed the user",
+                               message_action_link="/search",
+                               message_action_message="Search Users"
+                               )
     else:
         print("else part worked")
         current_user.follows.append(required_user)
         db.session.add(current_user)
         db.session.commit()
-        return "<h1>followed</h1>"
+        return render_template("message.html", message_title="Followed",
+                               message_body="Followed the user",
+                               message_action_link="/search",
+                               message_action_message="Search Users"
+                               )
 
 
 @app.route('/users/<followers_followees>', methods=["GET"])
@@ -281,12 +316,20 @@ def like_post_get(pid):
         post.liked_users.remove(current_user)
         db.session.add(post)
         db.session.commit()
-        return "<h1>Unliked the Post</h1>"
+        return render_template("message.html", message_title="Unliked",
+                               message_body="Unliked the post",
+                               message_action_link=f"/post/{post.id}",
+                               message_action_message="See Post"
+                               )
     else:
         post.liked_users.append(current_user)
         db.session.add(post)
         db.session.commit()
-        return "<h1>Liked the Post</h1>"
+        return render_template("message.html", message_title="Liked",
+                               message_body="Liked the post",
+                               message_action_link=f"/post/{post.id}",
+                               message_action_message="See Post"
+                               )
 
 
 @app.route('/create_comment/<pid>', methods=["POST"])
@@ -297,4 +340,142 @@ def create_comment_post(pid):
         comment = Comment(comment=form.comment.data, author_id=current_user.id, post_id=int(pid))
         db.session.add(comment)
         db.session.commit()
-        return "<h1>Added the comment</h1>"
+        return render_template("message.html", message_title="Comment Added",
+                               message_body="Added the comment successfully",
+                               message_action_link=f"/post/{pid}",
+                               message_action_message="See Post"
+                               )
+
+
+@app.route('/comment-like-unlike/<cid>', methods=["GET"])
+@login_required
+def comment_likeunlike_get(cid):
+    comment = Comment.query.filter(Comment.id == int(cid)).first()
+    if current_user in comment.liked_users:
+        comment.liked_users.remove(current_user)
+        db.session.add(comment)
+        db.session.commit()
+        return render_template("message.html", message_title="Comment Liked",
+                               message_body="Liked the comment",
+                               message_action_link=f"/post/{comment.post_id}",
+                               message_action_message="See Post"
+                               )
+    else:
+        comment.liked_users.append(current_user)
+        db.session.add(comment)
+        db.session.commit()
+        return render_template("message.html", message_title="Comment Unliked",
+                               message_body="Unliked the comment",
+                               message_action_link=f"/post/{comment.post_id}",
+                               message_action_message="See Post"
+                               )
+
+
+@app.route('/comment-delete/<cid>', methods=["GET"])
+@login_required
+def comment_delete_get(cid):
+    comment = Comment.query.filter(Comment.id == int(cid)).first()
+    if comment.author == current_user:
+        comment.liked_users = []
+        Comment.query.filter(Comment.id == int(cid)).delete()
+        db.session.commit()
+        return render_template("message.html", message_title="Comment Deleted",
+                               message_body="Deleted the comment",
+                               message_action_link=f"/post/{comment.post_id}",
+                               message_action_message="See Post")
+    else:
+        return render_template("message.html", message_title="Can't Delete",
+                               message_body="Cannot delete the comment",
+                               message_action_link=f"/post/{comment.post_id}",
+                               message_action_message="See Post")
+
+
+@app.route('/edit-post/<pid>', methods=["GET"])
+@login_required
+def edit_post_get(pid):
+    post = Post.query.filter(Post.id == int(pid)).first()
+    form = PostEditForm()
+    form.title.data = post.title
+    form.description.data = post.description
+    if post.author == current_user:
+        return render_template("edit_post.html", post=post, form=form)
+    else:
+        return render_template("message.html", message_title="Not authorized",
+                               message_body="You're not authorized to edit this post",
+                               message_action_link=f"/post/{pid}",
+                               message_action_message="See Post")
+
+
+@app.route('/edit-post/<pid>', methods=["POST"])
+@login_required
+def edit_post_post(pid):
+    form = PostEditForm()
+    post = Post.query.filter(Post.id == int(pid)).first()
+    if post.author == current_user:
+        if form.validate_on_submit():
+            post.title = form.title.data
+            post.description = form.description.data
+            if not form.is_same_image.data and form.imageUrl.data:
+                image = form.imageUrl.data
+                filename = image.filename
+                f_extension = filename[filename.rfind('.') + 1:]
+                s_filename = secure_filename(str(post.id) + '.' + f_extension)
+                image.save(os.path.join(app.config['UPLOAD_FOLDER'] + "post_thumbs", s_filename))
+                post.imageUrl = app.config['UPLOAD_FOLDER'] + "post_thumbs/" + s_filename
+            if not form.is_same_image.data and not form.imageUrl.data:
+                post.imageUrl = app.config['UPLOAD_FOLDER'] + "post_thumbs/default_post.png"
+            db.session.add(post)
+            db.session.commit()
+            return render_template("message.html", message_title="Update Success",
+                                   message_body="Post updated successfully",
+                                   message_action_link=f"/post/{pid}",
+                                   message_action_message="See Post")
+        else:
+            return render_template("message.html", message_title="Update Error",
+                                   message_body="Couldn't update post. Data validation error",
+                                   message_action_link=f"/edit-post/{pid}",
+                                   message_action_message="Try Again")
+    else:
+        return render_template("message.html", message_title="Not authorized",
+                               message_body="You're not authorized to edit this post",
+                               message_action_link=f"/post/{pid}",
+                               message_action_message="See Post")
+
+
+@app.route("/edit-user", methods=["GET"])
+@login_required
+def edit_user_get():
+    form = UserEditForm()
+    form.name.data = current_user.username
+    return render_template("edit_user.html", form=form)
+
+
+@app.route("/edit-user", methods=["POST"])
+@login_required
+def edit_user_post():
+    form = UserEditForm()
+    user = User.query.filter(User.id == current_user.id).first()
+    if form.validate_on_submit():
+        user.username = form.name.data
+        hashed_password = generate_password_hash(form.password.data, method="sha256")
+        user.password = hashed_password
+        if not form.is_same_image.data and form.imageUrl.data:
+            image = form.imageUrl.data
+            filename = image.filename
+            f_extension = filename[filename.rfind('.') + 1:]
+            s_filename = secure_filename(str(current_user.id) + '.' + f_extension)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'] + "user_thumbs", s_filename))
+            current_user.imageUrl = app.config['UPLOAD_FOLDER'] + "user_thumbs/" + s_filename
+        if not form.is_same_image.data and not form.imageUrl.data:
+            user.imageUrl = app.config['UPLOAD_FOLDER'] + "user_thumbs/pro_img1.png"
+        db.session.add(user)
+        db.session.commit()
+        return render_template("message.html", message_title="Update Success",
+                               message_body="User details updated successfully",
+                               message_action_link="/dashboard",
+                               message_action_message="Go to dashboard")
+    else:
+        return render_template("message.html", message_title="Update Error",
+                               message_body="Couldn't update user. Data validation error",
+                               message_action_link="/edit-user",
+                               message_action_message="Try again")
