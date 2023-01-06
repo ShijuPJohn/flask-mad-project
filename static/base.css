@@ -1,15 +1,13 @@
 
 :root {
-    --color-primary: #ff3064;
-    --color-primary-light: #FF3366;
-    --color-primary-dark: #BA265D;
-    --grey-light-1: #faf9f9;
-    --grey-light-2: #f4f2f2;
-    --grey-light-3: #f0eeee;
-    --grey-light-4: #ccc;
-    --grey-dark-1: #333;
-    --grey-dark-2: #777;
-    --grey-dark-3: #999;
+    --col-primary: #f3285a;
+    --col-primary-light: #ff4f7b;
+    --col-primary-dark: #ab1b50;
+    --grey-light-1: #fcfcfc;
+    --grey-light-2: #f3f3f3;
+    --grey-dark-1: #3d3d3d;
+    --grey-dark-2: #808080;
+    --grey-dark-3: #9d9d9d;
 }
 
 *,
@@ -28,7 +26,7 @@ body {
     font-family: "Raleway", sans-serif;
     font-weight: 400;
     line-height: 1.6;
-    background-image: linear-gradient(to right bottom, var(--color-primary-light), var(--color-primary-dark));
+    background-image: linear-gradient(to right bottom, var(--col-primary-light), var(--col-primary-dark));
     background-size: cover;
     background-repeat: no-repeat;
     min-height: 100vh;
@@ -57,7 +55,8 @@ body {
     font-weight: 300;
     color: #f0eeee;
 }
-.logo-box{
+
+.logo-box {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -93,7 +92,7 @@ main {
 footer {
     width: 100%;
     min-height: 8rem;
-    background-color:var(--grey-dark-1);
+    background-color: var(--grey-dark-1);
     position: absolute;
     bottom: 0;
     left: 0;
@@ -101,11 +100,13 @@ footer {
     justify-content: center;
     align-items: center;
 }
-.site-info{
+
+.site-info {
     font-size: 1.8rem;
     color: #f0eeee;
 }
-main{
+
+main {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -113,22 +114,34 @@ main{
     min-height: 90vh;
     padding-bottom: 8rem;
 }
-.nav-icon{
-    height:2.5rem;
+
+.nav-icon {
+    height: 2.5rem;
     margin-right: .5rem;
 }
-.navbar-icon-box{
+
+.navbar-icon-box {
     margin: 0 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.logout-icon{
+
+.logout-icon {
     margin-top: .2rem;
     height: 2rem;
 }
+
 a,
 a:link,
-a:visited{
+a:visited {
     text-decoration: none;
+}
+
+#snackbar {
+    background-color: green;
+    position: absolute;
+    bottom: 150vh;
+    left: 2vw;
+    font-size: 3rem;
 }

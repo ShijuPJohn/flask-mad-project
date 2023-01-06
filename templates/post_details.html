@@ -10,6 +10,7 @@
                 <img src="../static/edit_icon.png" alt="post edit" class="edit-icon">
             </a>
         {% endif %}
+        <button id="post-id" style="visibility: hidden">{{ post.id }}</button>
         <h1 class="post-title">{{ post.title }}</h1>
         <p class="timestamp">{{ post.author.username }} | {{ time }}</p>
         <div class="post-body-container">
@@ -17,17 +18,17 @@
                 <img src="/{{ post.imageUrl }}" alt="post image" class="post-image">
                 <p class="post-description">{{ post.description }}</p>
             </div>
-            <a href="/like_dislike_post/{{ post.id }}">
-                <div class="post-body-item likes-block">
+            {#            <a href="/like_dislike_post/{{ post.id }}">#}
+            <div class="post-body-item likes-block">
 
-                    {% if current_user in post.liked_users %}
-                        <img src="../static/love_active.png" alt="love icon inactive" class="love-icon">
-                    {% else %}
-                        <img src="../static/love_inactive.png" alt="love icon inactive" class="love-icon">
-                    {% endif %}
-                    <p class="love-text">{{ post.liked_users|length }}</p>
-                </div>
-            </a>
+                {% if current_user in post.liked_users %}
+                    <img src="../static/love_active.png" alt="love icon inactive" class="love-icon" id="love-icon">
+                {% else %}
+                    <img src="../static/love_inactive.png" alt="love icon inactive" class="love-icon" id="love-icon">
+                {% endif %}
+                <p class="love-text" id="post-love-count">{{ post.liked_users|length }}</p>
+            </div>
+            {#            </a>#}
             <div class="post-body-item comment-block">
                 <h2 class="comment-add-title">Add a comment</h2>
                 <div class="comment-add-box">
@@ -43,6 +44,7 @@
                 <h3 class="comment-list-section-title">{{ post.comments|length }} Comments</h3>
                 <div class="comment-list-block">
                     {% for comment in post.comments %}
+                        <p class="comment-id" style="visibility: hidden">{{ comment.id }}</p>
                         <div class="comment-list-card">
                             <div class="comment-list-image-container">
                                 <img src="/{{ comment.author.imageUrl }}" alt="commented user">
@@ -51,18 +53,18 @@
                                 <h3>{{ comment.author.username }}</h3>
                                 <p class="comment-list-text-block-comment">{{ comment.comment }}</p>
                                 <p class="comment-list-text-block-time">{{ comment_time_obj[comment.id] }}</p>
-                                <a href="/comment-like-unlike/{{ comment.id }}" class="comment-like-unlike-link">
-                                    <div class="comment-like-box">
-                                        {% if current_user in comment.liked_users %}
-                                            <img src="../static/love_active.png" alt="comment like"
-                                                 class="comment-like-icon">
-                                        {% else %}
-                                            <img src="../static/love_inactive.png" alt="comment like"
-                                                 class="comment-like-icon">
-                                        {% endif %}
-                                        <p>{{ comment.liked_users|length }}</p>
-                                    </div>
-                                </a>
+                                {#                                <a href="/comment-like-unlike/{{ comment.id }}" class="comment-like-unlike-link">#}
+                                <div class="comment-like-box">
+                                    {% if current_user in comment.liked_users %}
+                                        <img src="../static/love_active.png" alt="comment like"
+                                             class="comment-love-icon">
+                                    {% else %}
+                                        <img src="../static/love_inactive.png" alt="comment like"
+                                             class="comment-love-icon">
+                                    {% endif %}
+                                    <p class="comment-like-count">{{ comment.liked_users|length }}</p>
+                                </div>
+                                {#                                </a>#}
                             </div>
                             {% if current_user == comment.author or current_user==post.author %}
                                 <a href="/comment-delete/{{ comment.id }}" class="comment-delete-btn">
@@ -76,4 +78,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" src="../static/script/post.js">
+    </script>
 {% endblock %}

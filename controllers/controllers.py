@@ -111,11 +111,10 @@ def signup_post():
         db.session.flush()
         if form.imageUrl.data:
             image = form.imageUrl.data
-            filename = image.filename
-            f_extension = filename[filename.rfind('.') + 1:]
-            s_filename = secure_filename(str(new_user.id) + '.' + f_extension)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'] + "user_thumbs", s_filename))
-            new_user.imageUrl = app.config['UPLOAD_FOLDER'] + "user_thumbs/" + s_filename
+            file_ext = image.filename[image.filename.rfind('.'):]
+            s_fname = secure_filename(str(new_user.id) + file_ext)
+            image.save(os.path.join(app.config['UPLOADS_DIR'] + "user_thumbs", s_fname))
+            new_user.imageUrl = app.config['UPLOADS_DIR'] + "user_thumbs/" + s_fname
             db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
@@ -154,19 +153,13 @@ def create_post_post():
         db.session.flush()
         if form.imageUrl.data:
             image = form.imageUrl.data
-            filename = image.filename
-            f_extension = filename[filename.rfind('.') + 1:]
-            s_filename = secure_filename(str(post.id) + '.' + f_extension)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'] + "post_thumbs", s_filename))
-            post.imageUrl = app.config['UPLOAD_FOLDER'] + "post_thumbs/" + s_filename
+            file_ext = image.filename[image.filename.rfind('.'):]
+            s_fname = secure_filename(str(post.id) + file_ext)
+            image.save(os.path.join(app.config['UPLOADS_DIR'] + "post_thumbs", s_fname))
+            post.imageUrl = app.config['UPLOADS_DIR'] + "post_thumbs/" + s_fname
             db.session.add(post)
         db.session.commit()
-
-        return render_template("message.html", message_title="Post Created",
-                               message_body="New Post Created",
-                               message_action_link=f"/post/{post.id}",
-                               message_action_message="See Post"
-                               )
+        return redirect(f"/post/{post.id}")
     return render_template("message.html", message_title="Post Create Error",
                            message_body="Data Invalid",
                            message_action_link="/create-post",
@@ -308,28 +301,22 @@ def post_details_get(pid):
     return render_template("post_details.html", post=post, time=time, form=form, comment_time_obj=comment_time_obj)
 
 
-@app.route('/like_dislike_post/<pid>', methods=["GET"])
+@app.route('/like_dislike_post', methods=["POST"])
 @login_required
-def like_post_get(pid):
+def like_post_get2():
+    body_data = request.get_json()
+    pid = body_data["postID"]
     post = Post.query.filter(Post.id == int(pid)).first()
     if current_user in post.liked_users:
         post.liked_users.remove(current_user)
         db.session.add(post)
         db.session.commit()
-        return render_template("message.html", message_title="Unliked",
-                               message_body="Unliked the post",
-                               message_action_link=f"/post/{post.id}",
-                               message_action_message="See Post"
-                               )
+        return {"message": "unliked", "count": len(post.liked_users)}
     else:
         post.liked_users.append(current_user)
         db.session.add(post)
         db.session.commit()
-        return render_template("message.html", message_title="Liked",
-                               message_body="Liked the post",
-                               message_action_link=f"/post/{post.id}",
-                               message_action_message="See Post"
-                               )
+        return {"message": "liked", "count": len(post.liked_users)}
 
 
 @app.route('/create_comment/<pid>', methods=["POST"])
@@ -347,28 +334,22 @@ def create_comment_post(pid):
                                )
 
 
-@app.route('/comment-like-unlike/<cid>', methods=["GET"])
+@app.route('/comment-like-unlike', methods=["POST"])
 @login_required
-def comment_likeunlike_get(cid):
+def comment_likeunlike_get():
+    body_data = request.get_json()
+    cid = body_data["comment_id"]
     comment = Comment.query.filter(Comment.id == int(cid)).first()
     if current_user in comment.liked_users:
         comment.liked_users.remove(current_user)
         db.session.add(comment)
         db.session.commit()
-        return render_template("message.html", message_title="Comment Liked",
-                               message_body="Liked the comment",
-                               message_action_link=f"/post/{comment.post_id}",
-                               message_action_message="See Post"
-                               )
+        return {"message": "unliked", "count": len(comment.liked_users)}
     else:
         comment.liked_users.append(current_user)
         db.session.add(comment)
         db.session.commit()
-        return render_template("message.html", message_title="Comment Unliked",
-                               message_body="Unliked the comment",
-                               message_action_link=f"/post/{comment.post_id}",
-                               message_action_message="See Post"
-                               )
+        return {"message": "liked", "count": len(comment.liked_users)}
 
 
 @app.route('/comment-delete/<cid>', methods=["GET"])
@@ -417,13 +398,12 @@ def edit_post_post(pid):
             post.description = form.description.data
             if not form.is_same_image.data and form.imageUrl.data:
                 image = form.imageUrl.data
-                filename = image.filename
-                f_extension = filename[filename.rfind('.') + 1:]
-                s_filename = secure_filename(str(post.id) + '.' + f_extension)
-                image.save(os.path.join(app.config['UPLOAD_FOLDER'] + "post_thumbs", s_filename))
-                post.imageUrl = app.config['UPLOAD_FOLDER'] + "post_thumbs/" + s_filename
+                file_ext = image.filename[image.filename.rfind('.'):]
+                s_fname = secure_filename(str(post.id) + file_ext)
+                image.save(os.path.join(app.config['UPLOADS_DIR'] + "post_thumbs", s_fname))
+                post.imageUrl = app.config['UPLOADS_DIR'] + "post_thumbs/" + s_fname
             if not form.is_same_image.data and not form.imageUrl.data:
-                post.imageUrl = app.config['UPLOAD_FOLDER'] + "post_thumbs/default_post.png"
+                post.imageUrl = app.config['UPLOADS_DIR'] + "post_thumbs/default_post.png"
             db.session.add(post)
             db.session.commit()
             return render_template("message.html", message_title="Update Success",
@@ -461,13 +441,12 @@ def edit_user_post():
         user.password = hashed_password
         if not form.is_same_image.data and form.imageUrl.data:
             image = form.imageUrl.data
-            filename = image.filename
-            f_extension = filename[filename.rfind('.') + 1:]
-            s_filename = secure_filename(str(current_user.id) + '.' + f_extension)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'] + "user_thumbs", s_filename))
-            current_user.imageUrl = app.config['UPLOAD_FOLDER'] + "user_thumbs/" + s_filename
+            file_ext = image.filename[image.filename.rfind('.'):]
+            s_fname = secure_filename(str(current_user.id) + file_ext)
+            image.save(os.path.join(app.config['UPLOADS_DIR'] + "user_thumbs", s_fname))
+            current_user.imageUrl = app.config['UPLOADS_DIR'] + "user_thumbs/" + s_fname
         if not form.is_same_image.data and not form.imageUrl.data:
-            user.imageUrl = app.config['UPLOAD_FOLDER'] + "user_thumbs/pro_img1.png"
+            user.imageUrl = app.config['UPLOADS_DIR'] + "user_thumbs/pro_img1.png"
         db.session.add(user)
         db.session.commit()
         return render_template("message.html", message_title="Update Success",

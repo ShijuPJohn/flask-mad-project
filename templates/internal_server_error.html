@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>Internal Server Error</title>
+    <link rel="stylesheet" href="../static/message.css">
+{% endblock %}
+{% block body %}
+    <div class="message-body">
+        The server has encountered an error and we apologize for it.
+    </div>
+    <div class="message-action">
+        <a href="/dashboard">Go to dashboard</a>
+    </div>
+{% endblock %}

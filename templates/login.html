@@ -6,12 +6,12 @@
 {% block body %}
     <div class="root-container">
         <div class="title-text-box">Login</div>
-        <form class="form" method="post" action="/login">
-            {{ form.hidden_tag() }}
-            {{ form.email(class_="input-text") }}
-            {{ form.password(class_="input-text") }}
-            <input type="submit" class="btn submit">
-        </form>
+                <form class="form" method="post" action="/login">
+                    {{ form.hidden_tag() }}
+                    {{ form.email(class_="input-text") }}
+                    {{ form.password(class_="input-text") }}
+                    <input type="submit" class="btn submit">
+                </form>
         <div class="or-box">
         </div>
         <div class="create-account-box">
