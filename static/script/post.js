@@ -6,6 +6,9 @@ const data = {postID: parseInt(postIdElement.textContent)}
 const commentLikeButtons = document.querySelectorAll(".comment-love-icon")
 const commentIds = document.querySelectorAll(".comment-id")
 const commentCountLabels = document.querySelectorAll(".comment-like-count")
+const ownComments = document.querySelectorAll(".own-comment-True")
+const ownCommentsDeleteButtons = document.querySelectorAll(".comment-delete-own-True")
+const ownCommentIds = document.querySelectorAll(".own-comment-ids-True")
 
 async function likeBtnClickHandler() {
     const res = await fetch("/like_dislike_post", {
@@ -44,5 +47,21 @@ commentLikeButtons.forEach((btn, index) => {
             btn.src = "../static/love_inactive.png"
         }
         commentCountLabels[index].innerText = jsonResponse.count
+    })
+})
+ownCommentsDeleteButtons.forEach((btn, index) => {
+    btn.addEventListener("click", async () => {
+        const cid = ownCommentIds[index].textContent
+        const res = await fetch(`/comment-delete/${cid}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'DELETE',
+            mode: 'cors',
+        })
+        const jsonResponse = await res.json()
+        if (jsonResponse.status === "deleted") {
+            ownComments[index].remove()
+        }
     })
 })

@@ -352,23 +352,18 @@ def comment_likeunlike_get():
         return {"message": "liked", "count": len(comment.liked_users)}
 
 
-@app.route('/comment-delete/<cid>', methods=["GET"])
+@app.route('/comment-delete/<cid>', methods=["DELETE"])
 @login_required
 def comment_delete_get(cid):
+    print("delete called")
     comment = Comment.query.filter(Comment.id == int(cid)).first()
-    if comment.author == current_user:
+    if comment.author == current_user or comment.post.author == current_user:
         comment.liked_users = []
         Comment.query.filter(Comment.id == int(cid)).delete()
         db.session.commit()
-        return render_template("message.html", message_title="Comment Deleted",
-                               message_body="Deleted the comment",
-                               message_action_link=f"/post/{comment.post_id}",
-                               message_action_message="See Post")
+        return {"status": "deleted"}
     else:
-        return render_template("message.html", message_title="Can't Delete",
-                               message_body="Cannot delete the comment",
-                               message_action_link=f"/post/{comment.post_id}",
-                               message_action_message="See Post")
+        return {"status": "unauthorized"}
 
 
 @app.route('/edit-post/<pid>', methods=["GET"])

@@ -44,8 +44,9 @@
                 <h3 class="comment-list-section-title">{{ post.comments|length }} Comments</h3>
                 <div class="comment-list-block">
                     {% for comment in post.comments %}
+                        <p class="own-comment-ids-{{ current_user == comment.author or current_user==post.author  }}" style="visibility: hidden">{{ comment.id }}</p>
                         <p class="comment-id" style="visibility: hidden">{{ comment.id }}</p>
-                        <div class="comment-list-card">
+                        <div class="comment-list-card own-comment-{{ current_user == comment.author or current_user==post.author }}">
                             <div class="comment-list-image-container">
                                 <img src="/{{ comment.author.imageUrl }}" alt="commented user">
                             </div>
@@ -67,9 +68,11 @@
                                 {#                                </a>#}
                             </div>
                             {% if current_user == comment.author or current_user==post.author %}
-                                <a href="/comment-delete/{{ comment.id }}" class="comment-delete-btn">
-                                    <img src="../static/delete_icon.png" alt="comment delete">
-                                </a>
+{#                                <a href="/comment-delete/{{ comment.id }}" class="comment-delete-btn">#}
+                                    <img src="../static/delete_icon.png"
+                                         alt="comment delete"
+                                         class="comment-delete-btn comment-delete-own-{{  current_user == comment.author or current_user==post.author  }}">
+{#                                </a>#}
                             {% endif %}
                         </div>
                     {% endfor %}

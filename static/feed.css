@@ -136,3 +136,6 @@ text-decoration: none;
 .author-link{
     color: #4d4db0;
 }
+.love-icon{
+    cursor: pointer;
+}

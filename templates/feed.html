@@ -7,7 +7,10 @@
     <div class="root-container">
         {% if posts is defined and posts|length>0 %}
             {% for post in posts %}
-                <div class="post-card-full-container">
+                <p class="post-id" style="visibility: hidden">{{ post.id }}</p>
+                <p class="own-post-id-{{ current_user == post.author }}"
+                   style="visibility: hidden">{{ post.id }}</p>
+                <div class="post-card-full-container own-post-{{ current_user == comment.author }}">
                     <div class="post-card">
                         <div class="post-card-image-container">
                             <a href="/post/{{ post.id }}" class="post-link"><img src="{{ post.imageUrl }}" alt=""
@@ -23,16 +26,14 @@
                     </div>
                     <div class="horizontal-line"></div>
                     <div class="post-card-footer">
-                        <a href="/like_dislike_post/{{ post.id }}">
-                            <div class="icon-box number-likes-box">
-                                {% if current_user in post.liked_users %}
-                                    <img src="../static/love_active.png" alt="love icon inactive" class="love-icon">
-                                {% else %}
-                                    <img src="../static/love_inactive.png" alt="love icon inactive" class="love-icon">
-                                {% endif %}
-                                <p>{{ post.liked_users|length }}</p>
-                            </div>
-                        </a>
+                        <div class="icon-box number-likes-box">
+                            {% if current_user in post.liked_users %}
+                                <img src="../static/love_active.png" alt="love icon inactive" class="love-icon">
+                            {% else %}
+                                <img src="../static/love_inactive.png" alt="love icon inactive" class="love-icon">
+                            {% endif %}
+                            <p class="likes-number">{{ post.liked_users|length }}</p>
+                        </div>
                         <div class="icon-box number-comments-box">
                             <img src="../static/comments_icon.png" alt="loves">
                             <p>{{ post.comments|length }}</p>
@@ -57,4 +58,7 @@
         {% endif %}
     </div>
 
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" src="../static/script/feed_all_posts.js"></script>
 {% endblock %}

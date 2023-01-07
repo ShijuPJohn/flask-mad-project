@@ -236,8 +236,5 @@
 
 .comment-delete-btn {
     margin: 0 auto;
-}
-
-.comment-delete-btn img {
-    height: 1.5rem;
+    height: 2rem;
 }
