@@ -4,7 +4,7 @@ const allLikesNumbers = document.querySelectorAll(".likes-number")
 
 const ownPostIds = document.querySelectorAll(".own-post-id-True")
 const ownPosts = document.querySelectorAll(".own-post-True")
-const ownPostsDeleteButtons = document.querySelectorAll(".own-post-True")
+const ownPostsDeleteButtons = document.querySelectorAll(".own-post-delete-icon-True")
 
 allLoveIcons.forEach((icon, index) => {
     icon.addEventListener("click", async () => {
@@ -25,5 +25,21 @@ allLoveIcons.forEach((icon, index) => {
             icon.src = "../static/love_inactive.png"
         }
         allLikesNumbers[index].innerText = jsonResult.count
+    })
+})
+ownPostsDeleteButtons.forEach((btn, index) => {
+    const postId = ownPostIds[index].textContent
+    btn.addEventListener("click", async () => {
+        const res = await fetch(`/delete-post/${postId}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'DELETE',
+            mode: 'cors',
+        })
+        const jsonResponse = await res.json()
+        if (jsonResponse.status === "deleted") {
+            ownPosts[index].remove()
+        }
     })
 })

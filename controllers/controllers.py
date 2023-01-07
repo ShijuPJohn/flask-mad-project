@@ -209,29 +209,22 @@ def search_post():
     return render_template("search.html", users=users)
 
 
-@app.route('/follow-unfollow/<uid>', methods=["GET"])
+@app.route('/follow-unfollow', methods=["POST"])
 @login_required
-def follow_unfollow_get(uid):
-    required_user = User.query.filter(User.id == uid).first()
-    if required_user in current_user.follows:
-        current_user.follows.remove(required_user)
+def follow_unfollow_post():
+    body_data = request.get_json()
+    uid = body_data["userId"]
+    user_to_follow = User.query.filter(User.id == int(uid)).first()
+    if user_to_follow in current_user.follows:
+        current_user.follows.remove(user_to_follow)
         db.session.add(current_user)
         db.session.commit()
-        return render_template("message.html", message_title="Unfollowed",
-                               message_body="Unfollowed the user",
-                               message_action_link="/search",
-                               message_action_message="Search Users"
-                               )
+        return {"status": "unfollowed"}
     else:
-        print("else part worked")
-        current_user.follows.append(required_user)
+        current_user.follows.append(user_to_follow)
         db.session.add(current_user)
         db.session.commit()
-        return render_template("message.html", message_title="Followed",
-                               message_body="Followed the user",
-                               message_action_link="/search",
-                               message_action_message="Search Users"
-                               )
+        return {"status": "followed"}
 
 
 @app.route('/users/<followers_followees>', methods=["GET"])
@@ -264,29 +257,17 @@ def all_posts_get():
     return render_template("all-posts.html", time_obj=time_obj)
 
 
-@app.route('/delete-post/<pid>', methods=["GET"])
+@app.route('/delete-post2/<pid>', methods=["DELETE"])
 @login_required
-def delete_post_get(pid):
+def delete_post_get2(pid):
     post = Post.query.filter(Post.id == pid).first()
     if post:
         if post.author_id == current_user.id:
             Post.query.filter(Post.id == pid).delete()
             db.session.commit()
-            return render_template("message.html", message_title="Delete Successful",
-                                   message_body="Post deleted successfully",
-                                   message_action_link="/all-posts",
-                                   message_action_message="Go back"
-                                   )
-        return render_template("message.html", message_title="Not Authorized",
-                               message_body="You can't delete other user's posts",
-                               message_action_link="/all-posts",
-                               message_action_message="Go back"
-                               )
-    return render_template("message.html", message_title="Not Found",
-                           message_body="No posts found with this ID",
-                           message_action_link="/all-posts",
-                           message_action_message="Go back"
-                           )
+            return {"status": "deleted"}
+        return {"status": "unauthorized"}
+    return {"status": "not_found"}
 
 
 @app.route('/post/<pid>', methods=["GET"])

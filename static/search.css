@@ -137,7 +137,14 @@
     border-radius: 5px;
     font-size: 1.6rem;
 }
-
+.follow-unfollow-btn{
+    min-width: 10rem;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    color: whitesmoke;
+}
 
 .follow-btn {
     background-color: #4f9b4f;

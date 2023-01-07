@@ -63,7 +63,7 @@
 .post-link,
 .post-link:visited,
 .post-link:link {
-text-decoration: none;
+    text-decoration: none;
     color: var(--grey-dark-1);
 }
 
@@ -133,9 +133,12 @@ text-decoration: none;
 .icon-box img {
     height: 2rem;
 }
-.author-link{
+
+.author-link {
     color: #4d4db0;
 }
-.love-icon{
+
+.love-icon,
+.post-delete-icon {
     cursor: pointer;
 }

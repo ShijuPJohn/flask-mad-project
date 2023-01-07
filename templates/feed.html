@@ -10,7 +10,7 @@
                 <p class="post-id" style="visibility: hidden">{{ post.id }}</p>
                 <p class="own-post-id-{{ current_user == post.author }}"
                    style="visibility: hidden">{{ post.id }}</p>
-                <div class="post-card-full-container own-post-{{ current_user == comment.author }}">
+                <div class="post-card-full-container own-post-{{ current_user == post.author }}">
                     <div class="post-card">
                         <div class="post-card-image-container">
                             <a href="/post/{{ post.id }}" class="post-link"><img src="{{ post.imageUrl }}" alt=""
@@ -40,9 +40,10 @@
                         </div>
                         {% if current_user == post.author %}
                             <div class="icon-box delete-icon-box">
-                                <a href="/delete-post/{{ post.id }}">
-                                    <img src="../static/delete_icon.png" alt="delete post">
-                                </a>
+                                    <img src="../static/delete_icon.png"
+                                         alt="delete post"
+                                         class="post-delete-icon own-post-delete-icon-{{ current_user == post.author }}"
+                                    >
                             </div>
                             <div class="icon-box edit-icon-box">
                                 <a href="/edit-post/{{ post.id }}">
