@@ -57,6 +57,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: clip;
 
 }
 
@@ -68,10 +69,8 @@
 }
 
 .post-card-image {
-    max-height: 100%;
-    max-width: 100%;
+    width: 100%;
     object-fit: contain;
-    /*max-height: 10%;*/
 }
 
 .post-card-text-box {
@@ -141,4 +140,55 @@
 .love-icon,
 .post-delete-icon {
     cursor: pointer;
+}
+.modal-body {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 2;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dialog-box {
+    background-color: #eaeaea;
+    width: 50rem;
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /*border-radius: 10px;*/
+}
+
+.dialog-text {
+    font-size: 2rem;
+    margin-top: 1rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    margin:3rem 1rem 1rem 1rem
+}
+
+.modal-btn {
+    font-size: 1.8rem;
+    margin: .5rem 2rem;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    border-radius: 5px;
+    color: whitesmoke;
+}
+
+.modal-yes-btn {
+background-color: #884646;
+}
+
+.modal-no-btn {
+background-color: #2f502f;
 }

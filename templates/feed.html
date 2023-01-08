@@ -4,6 +4,17 @@
     <link rel="stylesheet" href="../static/feed.css">
 {% endblock %}
 {% block body %}
+     <div class="modal-body" id="modal" style="visibility: hidden">
+        <div class="dialog-box">
+            <p class="dialog-text">
+                Are you sure you want to delete this post?
+            </p>
+            <div class="modal-actions">
+                <div class="modal-btn modal-no-btn" id="modal-no-btn">No</div>
+                <div class="modal-btn modal-yes-btn" id="modal-yes-btn">Yes</div>
+            </div>
+        </div>
+    </div>
     <div class="root-container">
         {% if posts is defined and posts|length>0 %}
             {% for post in posts %}
@@ -35,7 +46,9 @@
                             <p class="likes-number">{{ post.liked_users|length }}</p>
                         </div>
                         <div class="icon-box number-comments-box">
+                            <a href="/post/{{ post.id }}#comment-count">
                             <img src="../static/comments_icon.png" alt="loves">
+                                </a>
                             <p>{{ post.comments|length }}</p>
                         </div>
                         {% if current_user == post.author %}

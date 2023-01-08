@@ -7,6 +7,7 @@
     <div class="root-container">
         {% if users is defined and users|length>0 %}
             {% for user in users %}
+                <p class="user-id" style="visibility:hidden;">{{ user.id }}</p>
                 <div class="user-card-full-container">
                     <div class="user-card-image-container">
                         <img src="/{{ user.imageUrl }}" alt="profile pic" class="user-card-image">
@@ -28,15 +29,14 @@
                     </div>
                     <div class="third-row">
                         {% if user in current_user.follows %}
-                            <a href="/follow-unfollow/{{ user.id }}" class="follow-unfollow-btn unfollow-btn">
+                            <button class="follow-unfollow-btn unfollow-btn">
                                 Unfollow
-                            </a>
+                            </button>
                         {% else %}
-                            <a href="/follow-unfollow/{{ user.id }}" class="follow-unfollow-btn follow-btn">
-                            Follow
-                            </a>
+                            <button class="follow-unfollow-btn follow-btn">
+                                Follow
+                            </button>
                         {% endif %}
-
                     </div>
                 </div>
             {% endfor %}
@@ -44,5 +44,7 @@
             <h2>There are no users that match your search criteria</h2>
         {% endif %}
     </div>
-    <script src="../static/search_page.js"></script>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" src="../static/script/search.js"></script>
 {% endblock %}

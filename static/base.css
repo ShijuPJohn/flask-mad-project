@@ -85,9 +85,6 @@ body {
     font-size: 1.4rem;
 }
 
-main {
-    min-height: 100vh;
-}
 
 footer {
     width: 100%;
@@ -113,6 +110,7 @@ main {
     align-items: center;
     min-height: 90vh;
     padding-bottom: 8rem;
+    position: relative;
 }
 
 .nav-icon {

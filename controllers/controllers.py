@@ -1,4 +1,6 @@
 import os
+import time
+from datetime import datetime
 
 from flask import render_template, redirect, request
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
@@ -172,7 +174,6 @@ def create_post_post():
 def my_posts_get():
     uid = current_user.id
     posts = Post.query.filter(Post.author == uid)
-    print(posts)
     return render_template("feed.html", user=current_user, posts=posts)
 
 
@@ -183,19 +184,15 @@ def feed_get():
     followees = current_user.follows
     followees_ids = [i.id for i in followees]
     followees_ids.append(uid)
-    posts_display = Post.query.filter(Post.author_id.in_(followees_ids)).all()
+    posts_display = Post.query.filter(Post.author_id.in_(followees_ids)).order_by(Post.time_created.desc()).all()
     time_obj = {}
     for post in posts_display:
-        time_obj[post.id] = post.time_created.strftime("%d-%B-%Y, %I:%M %p")
+        now_timestamp = time.time()
+        offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+        localtime = post.time_created + offset
+        time_obj[post.id] = localtime.strftime("%d-%B-%Y, %I:%M %p")
 
     return render_template("feed.html", posts=posts_display, time_obj=time_obj)
-
-
-# @app.route('/search', methods=["GET"])
-# @login_required
-# def search_get():
-#     users = User.query.filter(User.id != current_user.id).all()
-#     return render_template("search.html", users=users)
 
 
 @app.route('/search', methods=["GET"])
@@ -252,18 +249,23 @@ def user_get(uid):
 @login_required
 def all_posts_get():
     time_obj = {}
-    for post in current_user.posts:
-        time_obj[post.id] = post.time_created.strftime("%d-%B-%Y, %I:%M %p")
-    return render_template("all-posts.html", time_obj=time_obj)
+    posts = current_user.posts
+    for post in posts:
+        now_timestamp = time.time()
+        offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+        localtime = post.time_created + offset
+        time_obj[post.id] = localtime.strftime("%d-%B-%Y, %I:%M %p")
+    return render_template("all-posts.html", posts=posts, time_obj=time_obj)
 
 
-@app.route('/delete-post2/<pid>', methods=["DELETE"])
+@app.route('/delete-post/<pid>', methods=["DELETE"])
 @login_required
-def delete_post_get2(pid):
+def delete_post_get(pid):
     post = Post.query.filter(Post.id == pid).first()
     if post:
         if post.author_id == current_user.id:
-            Post.query.filter(Post.id == pid).delete()
+            post = Post.query.filter(Post.id == pid).first()
+            db.session.delete(post)
             db.session.commit()
             return {"status": "deleted"}
         return {"status": "unauthorized"}
@@ -274,12 +276,21 @@ def delete_post_get2(pid):
 @login_required
 def post_details_get(pid):
     post = Post.query.filter(Post.id == int(pid)).first()
-    time = post.time_created.strftime("%d-%B-%Y, %I:%M %p")
+    now_timestamp = time.time()
+    offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+    localtime = post.time_created + offset
+    formatted_time = localtime.strftime("%d-%B-%Y, %I:%M %p")
     form = CommentForm()
     comment_time_obj = {}
-    for comment in post.comments:
-        comment_time_obj[comment.id] = comment.time_created.strftime("%d-%B-%Y, %I:%M %p")
-    return render_template("post_details.html", post=post, time=time, form=form, comment_time_obj=comment_time_obj)
+    print(type(post.comments))
+    if post.comments:
+        for comment in post.comments:
+            now_timestamp = time.time()
+            offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+            comment_localtime = comment.time_created + offset
+            comment_time_obj[comment.id] = comment_localtime.strftime("%d-%B-%Y, %I:%M %p")
+    return render_template("post_details.html", post=post, time=formatted_time, form=form,
+                           comment_time_obj=comment_time_obj)
 
 
 @app.route('/like_dislike_post', methods=["POST"])
@@ -315,6 +326,34 @@ def create_comment_post(pid):
                                )
 
 
+@app.route('/create_comment2', methods=["POST"])
+@login_required
+def create_comment_post2():
+    body_data = request.get_json()
+    comment_body = body_data["commentBody"]
+    pid = body_data["postID"]
+    print(comment_body, pid)
+    if len(comment_body) > 0:
+        comment = Comment(comment=comment_body, author_id=current_user.id, post_id=int(pid))
+        db.session.add(comment)
+        db.session.commit()
+        post = Post.query.filter(Post.id == pid).first()
+        now_timestamp = time.time()
+        offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+        comment_localtime = comment.time_created + offset
+        comment_time_str = comment_localtime.strftime("%d-%B-%Y, %I:%M %p")
+        return {"status": "created",
+                "commentID": comment.id,
+                "authorImageUrl": current_user.imageUrl,
+                "count": len(post.comments),
+                "commentLikesCount": len(comment.liked_users),
+                "authorName": current_user.username,
+                "time": comment_time_str
+                }
+
+    return {"status": "invalid_data"}
+
+
 @app.route('/comment-like-unlike', methods=["POST"])
 @login_required
 def comment_likeunlike_get():
@@ -336,15 +375,17 @@ def comment_likeunlike_get():
 @app.route('/comment-delete/<cid>', methods=["DELETE"])
 @login_required
 def comment_delete_get(cid):
-    print("delete called")
     comment = Comment.query.filter(Comment.id == int(cid)).first()
-    if comment.author == current_user or comment.post.author == current_user:
-        comment.liked_users = []
-        Comment.query.filter(Comment.id == int(cid)).delete()
-        db.session.commit()
-        return {"status": "deleted"}
-    else:
-        return {"status": "unauthorized"}
+    if comment:
+        post = comment.Post
+        if comment.author == current_user or comment.post.author == current_user:
+            comment.liked_users = []
+            Comment.query.filter(Comment.id == int(cid)).delete()
+            db.session.commit()
+            return {"status": "deleted", "count": len(post.comments)}
+        else:
+            return {"status": "unauthorized", "count": len(post.comments)}
+    return {"status": "not_found"}
 
 
 @app.route('/edit-post/<pid>', methods=["GET"])

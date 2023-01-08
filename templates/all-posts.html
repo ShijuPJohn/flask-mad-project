@@ -4,44 +4,64 @@
     <link rel="stylesheet" href="../static/feed.css">
 {% endblock %}
 {% block body %}
+        <div class="modal-body" id="modal" style="visibility: hidden">
+        <div class="dialog-box">
+            <p class="dialog-text">
+                Are you sure you want to delete this post?
+            </p>
+            <div class="modal-actions">
+                <div class="modal-btn modal-no-btn" id="modal-no-btn">No</div>
+                <div class="modal-btn modal-yes-btn" id="modal-yes-btn">Yes</div>
+            </div>
+        </div>
+    </div>
     <div class="root-container">
-        {% if current_user.posts is defined and current_user.posts|length>0 %}
-            {% for post in current_user.posts %}
-                <div class="post-card-full-container">
+        {% if posts is defined and posts|length>0 %}
+            {% for post in posts %}
+                <p class="post-id" style="visibility: hidden">{{ post.id }}</p>
+                <p class="own-post-id-{{ current_user == post.author }}"
+                   style="visibility: hidden">{{ post.id }}</p>
+                <div class="post-card-full-container own-post-{{ current_user == post.author }}">
                     <div class="post-card">
                         <div class="post-card-image-container">
-                            <img src="{{ post.imageUrl }}" alt="" class="post-card-image">
+                            <a href="/post/{{ post.id }}" class="post-link"><img src="{{ post.imageUrl }}" alt=""
+                                                                                 class="post-card-image"></a>
                         </div>
                         <div class="post-card-text-box">
-                            <h2>{{ post.title }}</h2>
+                            <h2><a href="/post/{{ post.id }}" class="post-link">{{ post.title }}</a></h2>
                             <p>{{ post.description[:100] }}...</p>
-                            <p>{{ post.author.username }}</p>
+                            <p><a href="/user/{{ post.author.id }}" class="author-link">{{ post.author.username }}</a>
+                            </p>
                             <p>{{ time_obj[post.id] }}</p>
                         </div>
-{#                        {% if post.author==current_user %}#}
-{#                            <p class="post-card-own-flag">OWN</p>#}
-{#                        {% endif %}#}
                     </div>
                     <div class="horizontal-line"></div>
                     <div class="post-card-footer">
                         <div class="icon-box number-likes-box">
-                            <img src="../static/love_inactive.png" alt="loves">
-                            <p>{{ post.likes }}</p>
+                            {% if current_user in post.liked_users %}
+                                <img src="../static/love_active.png" alt="love icon inactive" class="love-icon">
+                            {% else %}
+                                <img src="../static/love_inactive.png" alt="love icon inactive" class="love-icon">
+                            {% endif %}
+                            <p class="likes-number">{{ post.liked_users|length }}</p>
                         </div>
                         <div class="icon-box number-comments-box">
                             <img src="../static/comments_icon.png" alt="loves">
                             <p>{{ post.comments|length }}</p>
                         </div>
-                        <div class="icon-box delete-icon-box">
-                            <a href="/delete-post/{{ post.id }}">
-                                <img src="../static/delete_icon.png" alt="delete post">
-                            </a>
-                        </div>
-                        <div class="icon-box edit-icon-box">
-                            <a href="/edit-post/{{ post.id }}">
-                                <img src="../static/edit_icon.png" alt="edit post">
-                            </a>
-                        </div>
+                        {% if current_user == post.author %}
+                            <div class="icon-box delete-icon-box">
+                                <img src="../static/delete_icon.png"
+                                     alt="delete post"
+                                     class="post-delete-icon own-post-delete-icon-{{ current_user == post.author }}"
+                                >
+                            </div>
+                            <div class="icon-box edit-icon-box">
+                                <a href="/edit-post/{{ post.id }}">
+                                    <img src="../static/edit_icon.png" alt="edit post">
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
@@ -49,5 +69,7 @@
             <h1> No Posts to show</h1>
         {% endif %}
     </div>
-
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" src="../static/script/feed_all_posts.js"></script>
 {% endblock %}

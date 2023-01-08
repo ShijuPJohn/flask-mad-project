@@ -4,12 +4,55 @@
     <link rel="stylesheet" href="../static/post.css">
 {% endblock %}
 {% block body %}
+
+    <div class="modal-body" id="modal" style="visibility: hidden">
+        <div class="dialog-box">
+            <p class="dialog-text">
+                Are you sure you want to delete this post?
+            </p>
+            <div class="modal-actions">
+                <div class="modal-btn modal-no-btn" id="modal-no-btn">No</div>
+                <div class="modal-btn modal-yes-btn" id="modal-yes-btn">Yes</div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body" id="comment-modal" style="visibility: hidden">
+        <div class="dialog-box">
+            <p class="dialog-text">
+                Are you sure you want to delete this comment?
+            </p>
+            <div class="modal-actions">
+                <div class="modal-btn modal-no-btn" id="comment-modal-no-btn">No</div>
+                <div class="modal-btn modal-yes-btn" id="comment-modal-yes-btn">Yes</div>
+            </div>
+        </div>
+    </div>
     <div class="root-container">
-        {% if current_user == post.author %}
-            <a href="/edit-post/{{ post.id }}">
-                <img src="../static/edit_icon.png" alt="post edit" class="edit-icon">
-            </a>
-        {% endif %}
+        <div class="action-buttons-box">
+            {% if current_user == post.author %}
+                <a href="/edit-post/{{ post.id }}">
+                    <img src="../static/edit_icon.png" alt="post edit" class="action-icon edit-icon">
+                </a>
+                <img src="../static/delete_icon.png" alt="delete post" class="action-icon delete-button"
+                     id="delete-btn">
+            {% endif %}
+            <div class="likes-block">
+                {% if current_user in post.liked_users %}
+                    <img src="../static/love_active.png" alt="love icon inactive" class="love-icon" id="love-icon">
+                {% else %}
+                    <img src="../static/love_inactive.png" alt="love icon inactive" class="love-icon"
+                         id="love-icon">
+                {% endif %}
+                <p class="love-text" id="post-love-count">{{ post.liked_users|length }}</p>
+            </div>
+            <div class="action-comments-icon">
+                <a href="#comment-count">
+                    <img src="../static/comments_icon.png" alt="comments" class="action-icon">
+                </a>
+                <p id="action-comment-count">{{ post.comments|length }}</p>
+            </div>
+
+        </div>
         <button id="post-id" style="visibility: hidden">{{ post.id }}</button>
         <h1 class="post-title">{{ post.title }}</h1>
         <p class="timestamp">{{ post.author.username }} | {{ time }}</p>
@@ -19,32 +62,22 @@
                 <p class="post-description">{{ post.description }}</p>
             </div>
             {#            <a href="/like_dislike_post/{{ post.id }}">#}
-            <div class="post-body-item likes-block">
 
-                {% if current_user in post.liked_users %}
-                    <img src="../static/love_active.png" alt="love icon inactive" class="love-icon" id="love-icon">
-                {% else %}
-                    <img src="../static/love_inactive.png" alt="love icon inactive" class="love-icon" id="love-icon">
-                {% endif %}
-                <p class="love-text" id="post-love-count">{{ post.liked_users|length }}</p>
-            </div>
             {#            </a>#}
             <div class="post-body-item comment-block">
                 <h2 class="comment-add-title">Add a comment</h2>
                 <div class="comment-add-box">
                     <img src="/{{ current_user.imageUrl }}" alt="" class="comment-add-box-thumb">
-                    <form class="comment-form" method="post"
-                          action="/create_comment/{{ post.id }}"
-                          enctype="multipart/form-data">
-                        {{ form.hidden_tag() }}
-                        {{ form.comment(class_="comment-input-field") }}<br>
-                        <button type="submit" class="comment-submit-btn"> Post Comment</button>
-                    </form>
+                    <div class="comment-form">
+                        <textarea name="comment-body" id="comment-input" cols="30" rows="6"></textarea>
+                        <button id="post-comment-btn">post comment</button>
+                    </div>
                 </div>
-                <h3 class="comment-list-section-title">{{ post.comments|length }} Comments</h3>
-                <div class="comment-list-block">
+                <h3 class="comment-list-section-title" id="comment-count">{{ post.comments|length }} Comments</h3>
+                <div class="comment-list-block" id="comment-list-block">
                     {% for comment in post.comments %}
-                        <p class="own-comment-ids-{{ current_user == comment.author or current_user==post.author  }}" style="visibility: hidden">{{ comment.id }}</p>
+                        <p class="own-comment-ids-{{ current_user == comment.author or current_user==post.author }}"
+                           style="visibility: hidden">{{ comment.id }}</p>
                         <p class="comment-id" style="visibility: hidden">{{ comment.id }}</p>
                         <div class="comment-list-card own-comment-{{ current_user == comment.author or current_user==post.author }}">
                             <div class="comment-list-image-container">
@@ -68,11 +101,11 @@
                                 {#                                </a>#}
                             </div>
                             {% if current_user == comment.author or current_user==post.author %}
-{#                                <a href="/comment-delete/{{ comment.id }}" class="comment-delete-btn">#}
-                                    <img src="../static/delete_icon.png"
-                                         alt="comment delete"
-                                         class="comment-delete-btn comment-delete-own-{{  current_user == comment.author or current_user==post.author  }}">
-{#                                </a>#}
+                                {#                                <a href="/comment-delete/{{ comment.id }}" class="comment-delete-btn">#}
+                                <img src="../static/delete_icon.png"
+                                     alt="delete comment"
+                                     class="comment-delete-btn comment-delete-own-{{ current_user == comment.author or current_user==post.author }}">
+                                {#                                </a>#}
                             {% endif %}
                         </div>
                     {% endfor %}
