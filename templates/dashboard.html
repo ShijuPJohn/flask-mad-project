@@ -4,6 +4,17 @@
     <link rel="stylesheet" href="../static/dashboard.css">
 {% endblock %}
 {% block body %}
+    <div class="modal-body" id="modal" style="visibility: hidden">
+        <div class="dialog-box">
+            <p class="dialog-text">
+                Are you sure you want to delete your account?
+            </p>
+            <div class="modal-actions">
+                <div class="modal-btn modal-no-btn" id="modal-no-btn">No</div>
+                <div class="modal-btn modal-yes-btn" id="modal-yes-btn">Yes</div>
+            </div>
+        </div>
+    </div>
     <div class="root-container">
         <div class="top-banner">
             <div class="welcome-box">
@@ -33,7 +44,10 @@
                 </div>
             </a>
         </div>
-
+        <div class="action-buttons-section">
+            <a href="/edit-user" class="action-btn edit-user-btn">Update Details</a>
+            <div class="action-btn delete-user-btn" id="delete-user-btn">Delete User Account</div>
+        </div>
 
         <div class="posts-section-container">
             <a href="/all-posts"><h2 class="subtitle">
@@ -61,4 +75,7 @@
         </div>
     </div>
 
+{% endblock %}
+{% block script %}
+    <script type="text/javascript" src="../static/script/dashboard.js"></script>
 {% endblock %}

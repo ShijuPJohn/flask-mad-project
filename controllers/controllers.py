@@ -447,6 +447,15 @@ def edit_user_get():
     return render_template("edit_user.html", form=form)
 
 
+@app.route("/delete-user", methods=["DELETE"])
+@login_required
+def delete_user():
+    user = User.query.filter(User.id == current_user.id).first()
+    db.session.delete(user)
+    db.session.commit()
+    return {"status": "deleted"}
+
+
 @app.route("/edit-user", methods=["POST"])
 @login_required
 def edit_user_post():

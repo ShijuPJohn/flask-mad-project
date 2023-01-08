@@ -40,11 +40,12 @@
 }
 
 .love-text {
-    margin-left: .2rem;
+    margin-left: .3rem;
     font-size: 1.5rem;
     color: #732828;
     margin-bottom: .3rem;
     font-weight: 600;
+    font-family: sans-serif;
 }
 
 .action-icon {
@@ -58,11 +59,12 @@
     align-items: center;
 }
 .action-comments-icon p{
-     margin-left: .2rem;
+     margin-left: .3rem;
     font-size: 1.5rem;
     color: #732828;
     margin-bottom: .3rem;
     font-weight: 600;
+    font-family: sans-serif;
 }
 .edit-icon {
     margin-top: 1.5rem;
