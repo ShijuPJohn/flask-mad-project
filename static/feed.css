@@ -138,9 +138,11 @@
 }
 
 .love-icon,
-.post-delete-icon {
+.post-delete-icon,
+.archive-post-button {
     cursor: pointer;
 }
+
 .modal-body {
     position: fixed;
     height: 100vh;
@@ -173,7 +175,7 @@
 .modal-actions {
     display: flex;
     justify-content: center;
-    margin:3rem 1rem 1rem 1rem
+    margin: 3rem 1rem 1rem 1rem
 }
 
 .modal-btn {
@@ -186,9 +188,9 @@
 }
 
 .modal-yes-btn {
-background-color: #884646;
+    background-color: #884646;
 }
 
 .modal-no-btn {
-background-color: #2f502f;
+    background-color: #2f502f;
 }

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block head %}
-    <title>Dashboard</title>
+    <title>{{ user.username }}</title>
     <link rel="stylesheet" href="../static/user.css">
 {% endblock %}
 {% block body %}
@@ -19,7 +19,7 @@
                     <h2>{{ user.username }}</h2>
                 </div>
             </div>
-            <a href="/all-posts">
+            <a href="/user/{{ user.id }}/all-posts">
                 <div class="count-box">
                     <span class="count-text">Total Posts</span>
                     <span class="count-number"> {{ user.posts|length }}</span>
@@ -54,22 +54,26 @@
 
         </div>
         <div class="posts-section-container">
-            <h2 class="subtitle">
-                {{ user.username }}'s Posts:
-            </h2>
+            <a href="/user/{{ user.id }}/all-posts">
+                <h2 class="subtitle">
+                    {{ user.username }}'s Public Posts:
+                </h2>
+            </a>
 
             <div class="post-container">
                 {% if user.posts is defined and user.posts|length > 0 %}
                     {% for post in user.posts %}
-                        <a href="/post/{{ post.id }}">
-                            <div class="post-thumb-box">
-                                <div class="post-thumb-image-container">
-                                    <img src="/{{ post.imageUrl }}" alt="post">
+                        {% if not post.archived %}
+                            <a href="/post/{{ post.id }}">
+                                <div class="post-thumb-box">
+                                    <div class="post-thumb-image-container">
+                                        <img src="/{{ post.imageUrl }}" alt="post">
+                                    </div>
+                                    <h2>{{ post.title }}</h2>
+                                    <p>{{ post.description[:20] }}....</p>
                                 </div>
-                                <h2>{{ post.title }}</h2>
-                                <p>{{ post.description[:20] }}....</p>
-                            </div>
-                        </a>
+                            </a>
+                        {% endif %}
                     {% endfor %}
                 {% else %}
                     <h2>No posts to show</h2>

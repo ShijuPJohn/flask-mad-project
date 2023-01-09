@@ -184,7 +184,8 @@ def feed_get():
     followees = current_user.follows
     followees_ids = [i.id for i in followees]
     followees_ids.append(uid)
-    posts_display = Post.query.filter(Post.author_id.in_(followees_ids)).order_by(Post.time_created.desc()).all()
+    posts_display = Post.query.filter(Post.author_id.in_(followees_ids), Post.archived != True).order_by(
+        Post.time_created.desc()).all()
     time_obj = {}
     for post in posts_display:
         now_timestamp = time.time()
@@ -271,6 +272,26 @@ def delete_post_get(pid):
             db.session.delete(post)
             db.session.commit()
             return {"status": "deleted"}
+        return {"status": "unauthorized"}
+    return {"status": "not_found"}
+
+
+@app.route('/archive-post/<pid>', methods=["GET"])
+@login_required
+def archive_post_get(pid):
+    post = Post.query.filter(Post.id == pid).first()
+    if post:
+        if post.author_id == current_user.id:
+            if not post.archived:
+                post.archived = True
+                db.session.add(post)
+                db.session.commit()
+                return {"status": "archived"}
+            else:
+                post.archived = False
+                db.session.add(post)
+                db.session.commit()
+                return {"status": "unarchived"}
         return {"status": "unauthorized"}
     return {"status": "not_found"}
 
@@ -505,3 +526,18 @@ def user_followees_get(uid):
     print(user.follows)
     users = user.follows
     return render_template("users.html", users=users, title=f"{user.username}'s Followees")
+
+
+@app.route('/user/<uid>/all-posts', methods=["GET"])
+@login_required
+def users_all_posts_get(uid):
+    time_obj = {}
+    user = User.query.filter(User.id == int(uid)).first()
+    posts = list(filter(lambda x: not x.archived, list(user.posts)))
+    print(posts)
+    for post in posts:
+        now_timestamp = time.time()
+        offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+        localtime = post.time_created + offset
+        time_obj[post.id] = localtime.strftime("%d-%B-%Y, %I:%M %p")
+    return render_template("all-posts.html", posts=posts, time_obj=time_obj)

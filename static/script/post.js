@@ -26,6 +26,10 @@ const commentListBlock = document.getElementById("comment-list-block")
 
 const actionCommentCount = document.getElementById("action-comment-count")
 
+const archiveBtn = document.getElementById("archive-icon")
+const archiveModal = document.getElementById("archive-modal")
+const archiveModalNoBtn = document.getElementById("archive-modal-no-btn")
+const archiveModalYesBtn = document.getElementById("archive-modal-yes-btn")
 
 let nodeToBeDeleted = null
 
@@ -195,5 +199,31 @@ postCommentBtn.addEventListener("click", async () => {
             }
             commentLikeCount.innerText = jsonResponseInner.count
         })
+    }
+})
+archiveBtn.addEventListener("click", () => {
+    archiveModal.style.visibility = "visible"
+})
+archiveModalNoBtn.addEventListener("click", () => {
+    archiveModal.style.visibility = "hidden"
+})
+
+archiveModalYesBtn.addEventListener("click", async () => {
+    const res = await fetch(`/archive-post/${postIdElement.textContent}`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'GET',
+        mode: 'cors',
+    })
+    const jsonResponse = await res.json()
+    console.log(jsonResponse)
+    if (jsonResponse.status === "archived") {
+        archiveModal.style.visibility = "hidden"
+        archiveBtn.src = "../static/archive_active.png"
+    }
+    if (jsonResponse.status === "unarchived") {
+        archiveModal.style.visibility = "hidden"
+        archiveBtn.src = "../static/archive_inactive.png"
     }
 })

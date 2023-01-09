@@ -15,6 +15,18 @@
             </div>
         </div>
     </div>
+
+    <div class="modal-body" id="archive-modal" style="visibility: hidden">
+        <div class="dialog-box" id="archive-modal-dialog-box">
+            <p class="dialog-text">
+                Are you sure you want to archive this post?
+            </p>
+            <div class="modal-actions">
+                <div class="modal-btn modal-no-btn" id="archive-modal-no-btn">No</div>
+                <div class="modal-btn modal-yes-btn" id="archive-modal-yes-btn">Yes</div>
+            </div>
+        </div>
+    </div>
     <div class="root-container">
         {% if posts is defined and posts|length>0 %}
             {% for post in posts %}
@@ -57,6 +69,9 @@
                                      alt="delete post"
                                      class="post-delete-icon own-post-delete-icon-{{ current_user == post.author }}"
                                 >
+                            </div>
+                            <div class="icon-box archive-icon-box">
+                                    <img src="/static/archive_inactive.png" alt="archive post" class="archive-post-button">
                             </div>
                             <div class="icon-box edit-icon-box">
                                 <a href="/edit-post/{{ post.id }}">

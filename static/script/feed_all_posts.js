@@ -10,6 +10,13 @@ const modal = document.getElementById("modal")
 const modalNoBtn = document.getElementById("modal-no-btn")
 const modalYesBtn = document.getElementById("modal-yes-btn")
 
+const ownPostsArchiveButtons = document.querySelectorAll(".archive-post-button")
+const archiveModal = document.getElementById("archive-modal")
+const archiveModalNoBtn = document.getElementById("archive-modal-no-btn")
+const archiveModalYesBtn = document.getElementById("archive-modal-yes-btn")
+
+const archiveModalAllPostsYesButton = document.getElementById("archive-modal-all-yes-btn")
+
 let postIdToDelete = -1
 let ownPostIndex = -1
 
@@ -62,3 +69,54 @@ modalYesBtn.addEventListener("click", async () => {
         modal.style.visibility = "hidden"
     }
 })
+ownPostsArchiveButtons.forEach((btn, index) => {
+    const postId = ownPostIds[index].textContent
+    btn.addEventListener("click", async () => {
+        postIdToDelete = postId
+        archiveModal.style.visibility = "visible"
+        ownPostIndex = index
+    })
+})
+archiveModalNoBtn.addEventListener("click", () => {
+    archiveModal.style.visibility = "hidden"
+})
+
+if (archiveModalYesBtn) {
+    archiveModalYesBtn.addEventListener("click", async () => {
+        const res = await fetch(`/archive-post/${postIdToDelete}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'GET',
+            mode: 'cors',
+        })
+        const jsonResponse = await res.json()
+        console.log(jsonResponse)
+        if (jsonResponse.status === "archived") {
+            ownPosts[ownPostIndex].remove()
+            archiveModal.style.visibility = "hidden"
+        }
+    })
+}
+
+if (archiveModalAllPostsYesButton) {
+    archiveModalAllPostsYesButton.addEventListener("click", async () => {
+        const res = await fetch(`/archive-post/${postIdToDelete}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'GET',
+            mode: 'cors',
+        })
+        const jsonResponse = await res.json()
+        console.log(jsonResponse)
+        if (jsonResponse.status === "archived") {
+            archiveModal.style.visibility = "hidden"
+            ownPostsArchiveButtons[ownPostIndex].src = "../static/archive_active.png"
+        }
+        if (jsonResponse.status === "unarchived") {
+            archiveModal.style.visibility = "hidden"
+            ownPostsArchiveButtons[ownPostIndex].src = "../static/archive_inactive.png"
+        }
+    })
+}

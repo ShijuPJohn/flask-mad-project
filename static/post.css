@@ -13,7 +13,7 @@
 }
 
 .action-buttons-box {
-    width: 6rem;
+    width: 7.5rem;
     position: fixed;
     left: 84.5vw;
     top: 40vh;
@@ -28,8 +28,15 @@
     background-color: #ffffff;
 }
 
+.archive-icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .likes-block {
-    height: 7rem;
+    /*background-color: red;*/
+    height: 5rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,7 +44,7 @@
 }
 
 .love-icon {
-    height: 50%;
+    height: 90%;
 }
 
 .love-text {
@@ -54,19 +61,22 @@
     margin: 1rem 0;
     cursor: pointer;
 }
-.action-comments-icon{
+
+.action-comments-icon {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.action-comments-icon p{
-     margin-left: .3rem;
+
+.action-comments-icon p {
+    margin-left: .3rem;
     font-size: 1.5rem;
     color: #732828;
     margin-bottom: .3rem;
     font-weight: 600;
     font-family: sans-serif;
 }
+
 .edit-icon {
     margin-top: 1.5rem;
 }

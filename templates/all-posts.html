@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block head %}
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="../static/feed.css">
+    <title>All Posts</title>
+    <link rel="stylesheet" href="/static/feed.css">
 {% endblock %}
 {% block body %}
-        <div class="modal-body" id="modal" style="visibility: hidden">
+    <div class="modal-body" id="modal" style="visibility: hidden">
         <div class="dialog-box">
             <p class="dialog-text">
                 Are you sure you want to delete this post?
@@ -15,6 +15,19 @@
             </div>
         </div>
     </div>
+
+    <div class="modal-body" id="archive-modal" style="visibility: hidden">
+        <div class="dialog-box" id="archive-modal-dialog-box">
+            <p class="dialog-text">
+                Are you sure you want to change the archive status?
+            </p>
+            <div class="modal-actions">
+                <div class="modal-btn modal-no-btn" id="archive-modal-no-btn">No</div>
+                <div class="modal-btn modal-yes-btn" id="archive-modal-all-yes-btn">Yes</div>
+            </div>
+        </div>
+    </div>
+
     <div class="root-container">
         {% if posts is defined and posts|length>0 %}
             {% for post in posts %}
@@ -24,7 +37,7 @@
                 <div class="post-card-full-container own-post-{{ current_user == post.author }}">
                     <div class="post-card">
                         <div class="post-card-image-container">
-                            <a href="/post/{{ post.id }}" class="post-link"><img src="{{ post.imageUrl }}" alt=""
+                            <a href="/post/{{ post.id }}" class="post-link"><img src="/{{ post.imageUrl }}" alt=""
                                                                                  class="post-card-image"></a>
                         </div>
                         <div class="post-card-text-box">
@@ -39,26 +52,37 @@
                     <div class="post-card-footer">
                         <div class="icon-box number-likes-box">
                             {% if current_user in post.liked_users %}
-                                <img src="../static/love_active.png" alt="love icon inactive" class="love-icon">
+                                <img src="/static/love_active.png" alt="love icon inactive" class="love-icon">
                             {% else %}
-                                <img src="../static/love_inactive.png" alt="love icon inactive" class="love-icon">
+                                <img src="/static/love_inactive.png" alt="love icon inactive" class="love-icon">
                             {% endif %}
                             <p class="likes-number">{{ post.liked_users|length }}</p>
                         </div>
                         <div class="icon-box number-comments-box">
-                            <img src="../static/comments_icon.png" alt="loves">
+                            <a href="/post/{{ post.id }}#comment-count">
+                                <img src="/static/comments_icon.png" alt="loves">
+                            </a>
                             <p>{{ post.comments|length }}</p>
                         </div>
                         {% if current_user == post.author %}
                             <div class="icon-box delete-icon-box">
-                                <img src="../static/delete_icon.png"
+                                <img src="/static/delete_icon.png"
                                      alt="delete post"
                                      class="post-delete-icon own-post-delete-icon-{{ current_user == post.author }}"
                                 >
                             </div>
+                            <div class="icon-box archive-icon-box">
+                                {% if not post.archived %}
+                                    <img src="/static/archive_inactive.png" alt="archive post"
+                                         class="archive-post-button">
+                                {% else %}
+                                    <img src="/static/archive_active.png" alt="archive post"
+                                         class="archive-post-button">
+                                {% endif %}
+                            </div>
                             <div class="icon-box edit-icon-box">
                                 <a href="/edit-post/{{ post.id }}">
-                                    <img src="../static/edit_icon.png" alt="edit post">
+                                    <img src="/static/edit_icon.png" alt="edit post">
                                 </a>
                             </div>
                         {% endif %}
@@ -71,5 +95,5 @@
     </div>
 {% endblock %}
 {% block script %}
-    <script type="text/javascript" src="../static/script/feed_all_posts.js"></script>
+    <script type="text/javascript" src="/static/script/feed_all_posts.js"></script>
 {% endblock %}
