@@ -30,7 +30,7 @@ class User(UserMixin, db.Model):
                               secondaryjoin=follows_followedby.c.follows == id,
                               backref="followers")
     posts = db.relationship("Post", cascade="all,delete", backref="author", order_by='Post.time_created.desc()')
-    comments = db.relationship("Comment",cascade="all,delete", backref="author")
+    comments = db.relationship("Comment", cascade="all,delete", backref="author")
     liked_posts = db.relationship("Post", secondary=post_likes, backref="liked_users")
     liked_comments = db.relationship("Comment", secondary=comment_likes, backref="liked_users")
 
@@ -64,6 +64,7 @@ class Post(db.Model):
     time_updated = db.Column(DateTime(timezone=True), onupdate=func.now())
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     comments = db.relationship("Comment", cascade="all,delete", backref="Post", order_by='Comment.time_created.desc()')
+    archived = db.Column(db.Boolean, default=False, nullable=False)
 
     def __str__(self):
         return "Post with title : " + self.title

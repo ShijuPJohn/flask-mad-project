@@ -1,13 +1,11 @@
 
 :root {
-    --col-primary: #f3285a;
-    --col-primary-light: #ff4f7b;
-    --col-primary-dark: #ab1b50;
-    --grey-light-1: #fcfcfc;
-    --grey-light-2: #f3f3f3;
-    --grey-dark-1: #3d3d3d;
-    --grey-dark-2: #808080;
-    --grey-dark-3: #9d9d9d;
+    --primary-color: #f3285a;
+    --primary-color-light: #ff4f7b;
+    --primary-color-dark: #ab1b50;
+    --grey-color-light1: #fcfcfc;
+    --grey-color-light2: #efefef;
+    --grey-color-dark1: #3d3d3d;
 }
 
 *,
@@ -26,9 +24,7 @@ body {
     font-family: "Raleway", sans-serif;
     font-weight: 400;
     line-height: 1.6;
-    background-image: linear-gradient(to right bottom, var(--col-primary-light), var(--col-primary-dark));
-    background-size: cover;
-    background-repeat: no-repeat;
+    background-image: linear-gradient(to right bottom, var(--primary-color-light), var(--primary-color-dark));
     min-height: 100vh;
     position: relative;
 }
@@ -40,7 +36,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--grey-dark-1);
+    background-color: var(--grey-color-dark1);
     height: 10rem;
     padding: 1rem;
     flex-wrap: wrap;
@@ -89,7 +85,7 @@ body {
 footer {
     width: 100%;
     min-height: 8rem;
-    background-color: var(--grey-dark-1);
+    background-color: var(--grey-color-dark1);
     position: absolute;
     bottom: 0;
     left: 0;

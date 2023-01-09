@@ -42,7 +42,7 @@
 }
 
 .input-text:focus {
-    border-color: var(--col-primary);
+    border-color: var(--primary-color);
     outline: none;
 }
 
@@ -53,7 +53,7 @@
     text-transform: uppercase;
     border-radius: 5px;
     border-width: 1px;
-    border-color: var(--col-primary);
+    border-color: var(--primary-color);
     border-style: solid;
     background: rgb(245, 143, 168);
     outline: none;

@@ -39,10 +39,11 @@
 
 .welcome-text-box :nth-child(2) {
     font-size: 3rem;
-    color: var(--grey-dark-1);
+    color: var(--grey-color-dark1);
 }
 
 .profile-pic {
+    cursor: pointer;
     height: 10rem;
 }
 
@@ -70,14 +71,14 @@
     font-size: 2rem;
     margin-left: 1rem;
     margin-top: 1rem;
-    color: var(--grey-dark-1);
+    color: var(--grey-color-dark1);
 }
 
 .subtitle {
     /*margin-left: 2rem;*/
     font-size: 2rem;
     font-weight: 500;
-    color: var(--grey-dark-1);
+    color: var(--grey-color-dark1);
 }
 
 .posts-section-container {
@@ -93,7 +94,7 @@
 .post-container a:visited,
 .post-container a:link {
     text-decoration: none;
-    color: var(--grey-dark-1);
+    color: var(--grey-color-dark1);
 }
 
 .post-container {
@@ -131,7 +132,7 @@
 
 .post-thumb-box p {
     font-size: 1.5rem;
-    color: var(--grey-dark-1);
+    color: var(--grey-color-dark1);
 }
 
 .post-thumb-image-container {
@@ -215,4 +216,26 @@ background-color: #884646;
 
 .modal-no-btn {
 background-color: #2f502f;
+}
+
+.modal-image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    height: 95vh;
+}
+
+#modal-close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+
+#modal-profile-img {
+    margin: 10rem;
+    height: 90%
 }

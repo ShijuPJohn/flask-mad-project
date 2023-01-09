@@ -212,16 +212,18 @@ def follow_unfollow_post():
     body_data = request.get_json()
     uid = body_data["userId"]
     user_to_follow = User.query.filter(User.id == int(uid)).first()
+    if current_user == user_to_follow:
+        return {"status": "invalid_operation"}
     if user_to_follow in current_user.follows:
         current_user.follows.remove(user_to_follow)
         db.session.add(current_user)
         db.session.commit()
-        return {"status": "unfollowed"}
+        return {"status": "unfollowed", "followers_count": len(user_to_follow.followers)}
     else:
         current_user.follows.append(user_to_follow)
         db.session.add(current_user)
         db.session.commit()
-        return {"status": "followed"}
+        return {"status": "followed", "followers_count": len(user_to_follow.followers)}
 
 
 @app.route('/users/<followers_followees>', methods=["GET"])
@@ -233,7 +235,8 @@ def users_get(followers_followees):
         users = current_user.follows
     else:
         return render_template("not_found.html")
-    return render_template("users.html", users=users)
+    return render_template("users.html", users=users,
+                           title="Your Followers" if followers_followees == "followers" else "Your followees")
 
 
 @app.route('/user/<uid>', methods=["GET"])
@@ -378,7 +381,7 @@ def comment_delete_get(cid):
     comment = Comment.query.filter(Comment.id == int(cid)).first()
     if comment:
         post = comment.Post
-        if comment.author == current_user or comment.post.author == current_user:
+        if comment.author == current_user or comment.Post.author == current_user:
             comment.liked_users = []
             Comment.query.filter(Comment.id == int(cid)).delete()
             db.session.commit()
@@ -484,3 +487,21 @@ def edit_user_post():
                                message_body="Couldn't update user. Data validation error",
                                message_action_link="/edit-user",
                                message_action_message="Try again")
+
+
+@app.route('/user/<uid>/followers', methods=["GET"])
+@login_required
+def user_followers_get(uid):
+    user = User.query.filter(User.id == uid).first()
+    users = user.followers
+    return render_template("users.html", users=users, title=f"{user.username}'s Followers")
+
+
+@app.route('/user/<uid>/followees', methods=["GET"])
+@login_required
+def user_followees_get(uid):
+    user = User.query.filter(User.id == uid).first()
+    print(user)
+    print(user.follows)
+    users = user.follows
+    return render_template("users.html", users=users, title=f"{user.username}'s Followees")

@@ -14,10 +14,14 @@
                 <p class="user-id" style="visibility:hidden;">{{ user.id }}</p>
                 <div class="user-card-full-container">
                     <div class="user-card-image-container">
-                        <img src="{{ user.imageUrl }}" alt="profile pic" class="user-card-image">
+                        <a href="/user/{{ user.id }}">
+                            <img src="/{{ user.imageUrl }}" alt="profile pic" class="user-card-image">
+                        </a>
                     </div>
                     <div class="user-card-text-box">
-                        <h2>{{ user.username }}</h2>
+                        <a href="/user/{{ user.id }}">
+                            <h2>{{ user.username }}</h2>
+                        </a>
                         <p class="user-card-email">{{ user.email }}</p>
                         <div class="number-posts-followers-block">
                             <div class="followers-block">

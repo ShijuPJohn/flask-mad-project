@@ -65,7 +65,7 @@
 .post-link:visited,
 .post-link:link {
     text-decoration: none;
-    color: var(--grey-dark-1);
+    color: var(--grey-color-dark1);
 }
 
 .post-card-image {
@@ -84,7 +84,7 @@
 .post-card-text-box h2 {
     font-size: 2.5rem;
     font-family: sans-serif;
-    color: var(--grey-dark-1);
+    color: var(--grey-color-dark1);
 }
 
 .post-card-text-box:nth-child(2) {

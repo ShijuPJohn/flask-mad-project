@@ -1,19 +1,24 @@
 {% extends "base.html" %}
 {% block head %}
-    <title>Search Users</title>
-    <link rel="stylesheet" href="../static/search.css">
+    <title>Users List </title>
+    <link rel="stylesheet" href="/static/search.css">
 {% endblock %}
 {% block body %}
     <div class="root-container">
         {% if users is defined and users|length>0 %}
+            <h1 class="h1-title">{{ title }}</h1>
             {% for user in users %}
                 <p class="user-id" style="visibility:hidden;">{{ user.id }}</p>
                 <div class="user-card-full-container">
                     <div class="user-card-image-container">
-                        <img src="/{{ user.imageUrl }}" alt="profile pic" class="user-card-image">
+                        <a href="/user/{{ user.id }}">
+                            <img src="/{{ user.imageUrl }}" alt="profile pic" class="user-card-image">
+                        </a>
                     </div>
                     <div class="user-card-text-box">
-                        <h2>{{ user.username }}</h2>
+                        <a href="/user/{{ user.id }}">
+                            <h2>{{ user.username }}</h2>
+                        </a>
                         <p class="user-card-email">{{ user.email }}</p>
                         <div class="number-posts-followers-block">
                             <div class="followers-block">
@@ -28,15 +33,18 @@
 
                     </div>
                     <div class="third-row">
-                        {% if user in current_user.follows %}
-                            <button class="follow-unfollow-btn unfollow-btn">
-                                Unfollow
-                            </button>
-                        {% else %}
-                            <button class="follow-unfollow-btn follow-btn">
-                                Follow
-                            </button>
+                        {% if user!=current_user %}
+                            {% if user in current_user.follows %}
+                                <button class="follow-unfollow-btn unfollow-btn">
+                                    Unfollow
+                                </button>
+                            {% else %}
+                                <button class="follow-unfollow-btn follow-btn">
+                                    Follow
+                                </button>
+                            {% endif %}
                         {% endif %}
+
                     </div>
                 </div>
             {% endfor %}
@@ -46,5 +54,5 @@
     </div>
 {% endblock %}
 {% block script %}
-    <script type="text/javascript" src="../static/script/search.js"></script>
+    <script type="text/javascript" src="/static/script/search.js"></script>
 {% endblock %}

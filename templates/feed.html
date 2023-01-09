@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block head %}
     <title>Dashboard</title>
-    <link rel="stylesheet" href="../static/feed.css">
+    <link rel="stylesheet" href="/static/feed.css">
 {% endblock %}
 {% block body %}
-     <div class="modal-body" id="modal" style="visibility: hidden">
-        <div class="dialog-box">
+    <div class="modal-body" id="modal" style="visibility: hidden">
+        <div class="dialog-box" id="modal-dialog-box">
             <p class="dialog-text">
                 Are you sure you want to delete this post?
             </p>
@@ -39,28 +39,28 @@
                     <div class="post-card-footer">
                         <div class="icon-box number-likes-box">
                             {% if current_user in post.liked_users %}
-                                <img src="../static/love_active.png" alt="love icon inactive" class="love-icon">
+                                <img src="/static/love_active.png" alt="love icon inactive" class="love-icon">
                             {% else %}
-                                <img src="../static/love_inactive.png" alt="love icon inactive" class="love-icon">
+                                <img src="/static/love_inactive.png" alt="love icon inactive" class="love-icon">
                             {% endif %}
                             <p class="likes-number">{{ post.liked_users|length }}</p>
                         </div>
                         <div class="icon-box number-comments-box">
                             <a href="/post/{{ post.id }}#comment-count">
-                            <img src="../static/comments_icon.png" alt="loves">
-                                </a>
+                                <img src="/static/comments_icon.png" alt="loves">
+                            </a>
                             <p>{{ post.comments|length }}</p>
                         </div>
                         {% if current_user == post.author %}
                             <div class="icon-box delete-icon-box">
-                                    <img src="../static/delete_icon.png"
-                                         alt="delete post"
-                                         class="post-delete-icon own-post-delete-icon-{{ current_user == post.author }}"
-                                    >
+                                <img src="/static/delete_icon.png"
+                                     alt="delete post"
+                                     class="post-delete-icon own-post-delete-icon-{{ current_user == post.author }}"
+                                >
                             </div>
                             <div class="icon-box edit-icon-box">
                                 <a href="/edit-post/{{ post.id }}">
-                                    <img src="../static/edit_icon.png" alt="edit post">
+                                    <img src="/static/edit_icon.png" alt="edit post">
                                 </a>
                             </div>
                         {% endif %}
@@ -74,5 +74,5 @@
 
 {% endblock %}
 {% block script %}
-    <script type="text/javascript" src="../static/script/feed_all_posts.js"></script>
+    <script type="text/javascript" src="/static/script/feed_all_posts.js"></script>
 {% endblock %}

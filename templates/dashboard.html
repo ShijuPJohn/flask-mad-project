@@ -4,6 +4,12 @@
     <link rel="stylesheet" href="../static/dashboard.css">
 {% endblock %}
 {% block body %}
+      <div class="modal-body" id="image-modal" style="visibility: hidden">
+        <div class="modal-image-container" id="modal-img-container" style="visibility:hidden;">
+            <img src="/static/close_icon.png" alt="close button" id="modal-close-btn">
+            <img src="/{{ user.imageUrl }}" alt="profile pic" id="modal-profile-img">
+        </div>
+    </div>
     <div class="modal-body" id="modal" style="visibility: hidden">
         <div class="dialog-box">
             <p class="dialog-text">
@@ -18,7 +24,7 @@
     <div class="root-container">
         <div class="top-banner">
             <div class="welcome-box">
-                <img src="{{ user.imageUrl }}" alt="user image" class="profile-pic">
+                <img src="/{{ user.imageUrl }}" alt="user image" class="profile-pic" id="profile-pic-thumb">
                 <div class="welcome-text-box">
                     <h2>Welcome</h2>
                     <h2>{{ user.username }}</h2>
