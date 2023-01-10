@@ -51,15 +51,17 @@
                     <div class="post-card-footer">
                         <div class="icon-box number-likes-box">
                             {% if current_user in post.liked_users %}
-                                <img src="/static/love_active.png" alt="love icon inactive" class="love-icon">
+                                <img src="/static/love_active.png" alt="love icon inactive" class="love-icon"
+                                     title="love">
                             {% else %}
-                                <img src="/static/love_inactive.png" alt="love icon inactive" class="love-icon">
+                                <img src="/static/love_inactive.png" alt="love icon inactive" class="love-icon"
+                                     title="love">
                             {% endif %}
                             <p class="likes-number">{{ post.liked_users|length }}</p>
                         </div>
                         <div class="icon-box number-comments-box">
                             <a href="/post/{{ post.id }}#comment-count">
-                                <img src="/static/comments_icon.png" alt="loves">
+                                <img src="/static/comments_icon.png" alt="loves" class="comment-icon">
                             </a>
                             <p>{{ post.comments|length }}</p>
                         </div>
@@ -71,7 +73,8 @@
                                 >
                             </div>
                             <div class="icon-box archive-icon-box">
-                                    <img src="/static/archive_inactive.png" alt="archive post" class="archive-post-button">
+                                <img src="/static/archive_inactive.png" alt="archive post" class="archive-post-button"
+                                     title="archive post">
                             </div>
                             <div class="icon-box edit-icon-box">
                                 <a href="/edit-post/{{ post.id }}">

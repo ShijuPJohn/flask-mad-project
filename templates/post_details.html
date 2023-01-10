@@ -51,10 +51,10 @@
                 <div class="archive-icon-box">
                     {% if not post.archived %}
                         <img src="/static/archive_inactive.png" alt="archive post"
-                             class="action-icon archive-post-button" id="archive-icon">
+                             class="action-icon archive-post-button" id="archive-icon" title="archive post">
                     {% else %}
                         <img src="/static/archive_active.png" alt="archive post"
-                             class="action-icon archive-post-button" id="archive-icon">
+                             class="action-icon archive-post-button" id="archive-icon" title="make post public">
                     {% endif %}
                 </div>
             {% endif %}
