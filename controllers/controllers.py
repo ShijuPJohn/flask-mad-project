@@ -1,9 +1,13 @@
+import datetime
 import os
 import time
-from datetime import datetime
 
-from flask import render_template, redirect, request
+import jwt
+import werkzeug
+from flask import render_template, redirect, request, jsonify
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
+from flask_marshmallow import Marshmallow
+from flask_restful import reqparse
 from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -13,6 +17,8 @@ from wtforms.widgets import TextArea
 
 from app import app
 from models.models import User, db, Post, Comment
+
+ma = Marshmallow(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -189,7 +195,7 @@ def feed_get():
     time_obj = {}
     for post in posts_display:
         now_timestamp = time.time()
-        offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+        offset = datetime.datetime.fromtimestamp(now_timestamp) - datetime.datetime.utcfromtimestamp(now_timestamp)
         localtime = post.time_created + offset
         time_obj[post.id] = localtime.strftime("%d-%B-%Y, %I:%M %p")
 
@@ -256,7 +262,7 @@ def all_posts_get():
     posts = current_user.posts
     for post in posts:
         now_timestamp = time.time()
-        offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+        offset = datetime.datetime.fromtimestamp(now_timestamp) - datetime.datetime.utcfromtimestamp(now_timestamp)
         localtime = post.time_created + offset
         time_obj[post.id] = localtime.strftime("%d-%B-%Y, %I:%M %p")
     return render_template("all-posts.html", posts=posts, time_obj=time_obj)
@@ -301,7 +307,7 @@ def archive_post_get(pid):
 def post_details_get(pid):
     post = Post.query.filter(Post.id == int(pid)).first()
     now_timestamp = time.time()
-    offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+    offset = datetime.datetime.fromtimestamp(now_timestamp) - datetime.datetime.utcfromtimestamp(now_timestamp)
     localtime = post.time_created + offset
     formatted_time = localtime.strftime("%d-%B-%Y, %I:%M %p")
     form = CommentForm()
@@ -310,7 +316,7 @@ def post_details_get(pid):
     if post.comments:
         for comment in post.comments:
             now_timestamp = time.time()
-            offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+            offset = datetime.datetime.fromtimestamp(now_timestamp) - datetime.datetime.utcfromtimestamp(now_timestamp)
             comment_localtime = comment.time_created + offset
             comment_time_obj[comment.id] = comment_localtime.strftime("%d-%B-%Y, %I:%M %p")
     return render_template("post_details.html", post=post, time=formatted_time, form=form,
@@ -363,7 +369,7 @@ def create_comment_post2():
         db.session.commit()
         post = Post.query.filter(Post.id == pid).first()
         now_timestamp = time.time()
-        offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+        offset = datetime.datetime.fromtimestamp(now_timestamp) - datetime.datetime.utcfromtimestamp(now_timestamp)
         comment_localtime = comment.time_created + offset
         comment_time_str = comment_localtime.strftime("%d-%B-%Y, %I:%M %p")
         return {"status": "created",
@@ -537,7 +543,7 @@ def users_all_posts_get(uid):
     print(posts)
     for post in posts:
         now_timestamp = time.time()
-        offset = datetime.fromtimestamp(now_timestamp) - datetime.utcfromtimestamp(now_timestamp)
+        offset = datetime.datetime.fromtimestamp(now_timestamp) - datetime.datetime.utcfromtimestamp(now_timestamp)
         localtime = post.time_created + offset
         time_obj[post.id] = localtime.strftime("%d-%B-%Y, %I:%M %p")
     return render_template("all-posts.html", posts=posts, time_obj=time_obj)

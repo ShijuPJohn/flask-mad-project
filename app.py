@@ -23,6 +23,7 @@ app.config["SECRET_KEY"] = "THIS_IS_MY_SUPER_SECRET"
 
 db.create_all()
 from controllers.controllers import *
+from controllers.api_controllers import *
 
 if __name__ == '__main__':
     app.run(debug=True)
