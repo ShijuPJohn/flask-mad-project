@@ -29,7 +29,7 @@ class UserDisplaySchema(ma.Schema):
 class UserSignupSchema(ma.Schema):
     class Meta:
         model = User
-        fields = ("id", "username", "email", "password")
+        fields = ("username", "email", "password")
 
     @post_load
     def make_user(self, data, **kwargs):
@@ -38,9 +38,20 @@ class UserSignupSchema(ma.Schema):
 
 class PostSchema(ma.Schema):
     class Meta:
+        model = Post
         fields = ("id", "title", "description", "imageUrl", "timeCreated", "author", "archived")
 
-    author = ma.Nested(UserSchema)
+    author = ma.Nested(UserDisplaySchema)
+
+
+class PostCreateSchema(ma.Schema):
+    class Meta:
+        model = Post
+        fields = ("title", "description", "author_id")
+
+    @post_load
+    def make_post(self, data, **kwargs):
+        return Post(**data)
 
 
 user_schema = UserSchema()
@@ -48,6 +59,7 @@ user_signup_schema = UserSignupSchema()
 user_display_schema = UserDisplaySchema()
 post_schema = PostSchema()
 posts_schema = PostSchema(many=True)
+post_create_schema = PostCreateSchema()
 
 
 def validate_token(func):
@@ -73,7 +85,8 @@ def validate_token(func):
     return w_func
 
 
-# ----------------API Routes------------------
+# -------------------------------User Routes--------------------------------
+
 @app.route("/api/user/signup", methods=["POST"])
 def api_user_signup():
     try:
@@ -184,6 +197,9 @@ def api_posts_get(uid, user_from_token):
     return posts_schema.jsonify(posts), 200
 
 
+# -----------------------------------POSTs Routes------------------------------------------
+
+
 @app.route('/api/post/<pid>', methods=["GET"])
 @validate_token
 def api_post_get(pid, user_from_token):
@@ -192,3 +208,32 @@ def api_post_get(pid, user_from_token):
         return post_schema.jsonify(post)
     return jsonify({"status": "not_found"}), 404
 
+
+@app.route("/api/post/create", methods=["POST"])
+@validate_token
+def api_post_create(user_from_token):
+    try:
+        request_data = request.json
+        if request_data["title"] and user_from_token:
+            post = Post(title=request_data["title"], description=request_data["description"],
+                        author=user_from_token)
+            db.session.add(post)
+            db.session.flush()
+            print(post)
+        # if post:
+        # hashed_password = generate_password_hash(user.password, method="sha256")
+        # user.password = hashed_password
+        # db.session.add(user)
+        # db.session.commit()
+        # token = jwt.encode(
+        #     {"user_id": user.id,
+        #      "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30)},
+        #     app.config["SECRET_KEY"]
+        # )
+            return {"post": post_schema.dump(post)}, 200
+    except ValidationError as v:
+        print(v)
+        return jsonify({"message": "bad_request"}), 400
+    except Exception as e:
+        print("Exception", e)
+        return jsonify({"message": "internal_server_error"}), 500
