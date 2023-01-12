@@ -63,6 +63,7 @@ class CommentDisplaySchema(ma.Schema):
 user_schema = UserSchema()
 user_signup_schema = UserSignupSchema()
 user_display_schema = UserDisplaySchema()
+users_display_schema = UserDisplaySchema(many=True)
 post_schema = PostSchema()
 posts_schema = PostSchema(many=True)
 post_create_schema = PostCreateSchema()
@@ -93,6 +94,15 @@ def validate_token(func):
 
 
 # -------------------------------User Routes--------------------------------
+@app.route("/api/user/users", methods=["GET"])
+def api_users_get():
+    try:
+        users = User.query.all()
+        return users_display_schema.dump(users), 200
+    except Exception as e:
+        print(e)
+        return jsonify({"message": "error"}), 500
+
 
 @app.route("/api/user/signup", methods=["POST"])
 def api_user_signup():
@@ -128,6 +138,8 @@ def api_user_update(user_from_token):
             db.session.add(user_from_token)
             db.session.commit()
             return {"message": "user_updated"}, 201
+        return {"message": "unauthorized"}, 401
+
     except Exception as e:
         print(e)
         return {"message": "error"}, 500
@@ -147,7 +159,7 @@ def api_user_delete(user_from_token):
         return {"message": "error"}, 500
 
 
-@app.route("/api/user/update-profile-pic", methods=["POST"])
+@app.route("/api/user/update-profile-pic", methods=["PUT"])
 @validate_token
 def api_user_prof_pic(user_from_token):
     try:
@@ -177,9 +189,9 @@ def api_user_login():
                  "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30)},
                 app.config["SECRET_KEY"]
             )
-            return jsonify({"status": "login_success", "token": token}), 200
-        return {"status": "invalid_credentials"}, 400
-    return {"status": "invalid_data"}, 400
+            return jsonify({"message": "login_success", "token": token}), 200
+        return {"message": "invalid_credentials"}, 400
+    return {"message": "invalid_data"}, 400
 
 
 @app.route('/api/user/<uid>', methods=["GET"])
@@ -187,7 +199,7 @@ def api_user_login():
 def api_user_get(uid, user_from_token):
     requested_user = User.query.filter(User.id == int(uid)).first()
     if requested_user:
-        return user_schema.jsonify(requested_user)
+        return users_display_schema.jsonify(requested_user)
     return {"status": "not_found"}, 404
 
 

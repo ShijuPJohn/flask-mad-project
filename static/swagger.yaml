@@ -1,0 +1,288 @@
+openapi: 3.0.0
+info:
+  title: GeeksNetwork API
+  description: API Specification for GeeksNetwork app built as part of MAD1 Project.
+  version: 0.1.9
+servers:
+  - url: http://localhost:5000/api
+    description: Api Server
+paths:
+  /user/users:
+    get:
+      summary: Returns the list of all users.
+      #      description: Optional extended description in CommonMark or HTML.
+      responses:
+        '200': # status code
+          description: A JSON array of user objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: "emma@email.com"
+                    id:
+                      type: integer
+                      example: 1
+                    imageUrl:
+                      type: string
+                      example: "static/uploads/user_thumbs/1.jpg"
+                    username:
+                      type: string
+                      example: "Emma Watson"
+        '500': # status code
+          description: A JSON object with message "error"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+  /user/signup:
+    post:
+      summary: "Creates a new user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              #              $ref: '#/controllers/api_controllers/user_signup_schema'
+              example: { "username": "Natalie Portman","email": "natalie@email.com","password": "natalie@email.com" }
+      responses:
+        '201':
+          description: "A JSON object with created user details"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1LCJleHAiOjE2NzYxMjgyMzh9.oTEC-HuQDh04gL0ndoCWqdVQHn8yc66TQbjDewK9B1A",
+                  "user": {
+                    "email": "natalie@email.com2",
+                    "id": 5,
+                    "imageUrl": "static/uploads/user_thumbs/pro_img1.png",
+                    "username": "Natalie Portman2"
+                  }
+                }
+        '400':
+          description: "A JSON object with the message bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "bad_request" }
+        '500': # status code
+          description: A JSON object with message "error"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+  /user/update:
+    put:
+      summary: "Updates a user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example: {
+                "username": "Natalie Portman5",
+                "email": "natalie5@email.com",
+                "password": "natalie5@email.com"
+              }
+      parameters:
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: "A JSON object with updated user details"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "user_updated" }
+        '400':
+          description: "A JSON object with the message unauthorized"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "unauthorized" }
+        '500': # status code
+          description: A JSON object with message "error"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+  /user/delete:
+    delete:
+      summary: "Deletes a user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example: {
+                "password": "natalie5@email.com"
+              }
+      parameters:
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "A JSON object with the message 'user deleted'"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "user_updated" }
+        '400':
+          description: "A JSON object with the message unauthorized"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "unauthorized" }
+        '404':
+          description: "A JSON object with the message not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "not_found" }
+        '500': # status code
+          description: A JSON object with message "error"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+
+  /user/update-profile-pic:
+    put:
+      summary: "uploads an image file. updates profile picture of a user"
+      consumes:
+        - multipart/form-data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example: {
+                "email": "natalie@email.com",
+                "password": "mysupersecretpassword"
+              }
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          description: The file to upload.
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: "A JSON object with the message 'file saved'"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "file_saved" }
+        '400':
+          description: "A JSON object with the message bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "bad_request" }
+
+  /user/{userId}:
+    get:
+      summary: "get user details of a single user"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "User ID"
+          schema:
+            type: integer
+
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: "A JSON object with token"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "status": "login_success",
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI5JkpXVCJ9.eyJ1c2VyX2lkIjo0LCJleHAiOjE2NzYxNDM1ODB9.Och10J4X-e2TmxsGW_mLfXwHOymfACM9XDX-U0Bbv7s"
+                }
+        '404':
+          description: "A JSON object with the message not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "not_found" }
+
+  /user/login:
+    post:
+      summary: "user login. generates token on successful login"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example: {
+                "email": "natalie@email.com",
+                "password": "mysupersecretpassword"
+              }
+      responses:
+        '200':
+          description: "A JSON object with token"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "status": "login_success",
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI5JkpXVCJ9.eyJ1c2VyX2lkIjo0LCJleHAiOjE2NzYxNDM1ODB9.Och10J4X-e2TmxsGW_mLfXwHOymfACM9XDX-U0Bbv7s"
+                }
+        '400':
+          description: "A JSON object with the message invalid data"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "ivalid_data" }
