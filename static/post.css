@@ -262,7 +262,8 @@
 }
 
 .comment-list-image-container img {
-    width: 95%;
+    max-widt: 95%;
+    max-height: 95%;
 }
 
 .comment-list-text-block {

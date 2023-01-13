@@ -93,7 +93,7 @@ def login_post():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect("/dashboard")
+                return redirect("/feed")
     return render_template('login_error.html')
 
 
