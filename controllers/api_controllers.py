@@ -104,7 +104,7 @@ def api_users_get():
         return jsonify({"message": "error"}), 500
 
 
-@app.route("/api/user/signup", methods=["POST"])
+@app.route("/api/user", methods=["POST"])
 def api_user_signup():
     try:
         user_from_request = request.json
@@ -127,7 +127,7 @@ def api_user_signup():
         return jsonify({"message": "internal_server_error"}), 500
 
 
-@app.route("/api/user/update", methods=["PUT"])
+@app.route("/api/user", methods=["PUT"])
 @validate_token
 def api_user_update(user_from_token):
     try:
@@ -145,7 +145,7 @@ def api_user_update(user_from_token):
         return {"message": "error"}, 500
 
 
-@app.route("/api/user/delete", methods=["DELETE"])
+@app.route("/api/user", methods=["DELETE"])
 @validate_token
 def api_user_delete(user_from_token):
     try:
@@ -159,7 +159,7 @@ def api_user_delete(user_from_token):
         return {"message": "error"}, 500
 
 
-@app.route("/api/user/update-profile-pic", methods=["PUT"])
+@app.route("/api/user/profile-pic", methods=["PUT"])
 @validate_token
 def api_user_prof_pic(user_from_token):
     try:
@@ -199,7 +199,7 @@ def api_user_login():
 def api_user_get(uid, user_from_token):
     requested_user = User.query.filter(User.id == int(uid)).first()
     if requested_user:
-        return users_display_schema.jsonify(requested_user)
+        return user_display_schema.jsonify(requested_user)
     return {"status": "not_found"}, 404
 
 
@@ -228,7 +228,7 @@ def api_user_follow_unfollow(uid, user_from_token):
 # -----------------------------------POSTs Routes------------------------------------------
 
 
-@app.route("/api/post/create", methods=["POST"])
+@app.route("/api/post", methods=["POST"])
 @validate_token
 def api_post_create(user_from_token):
     try:
@@ -244,7 +244,7 @@ def api_post_create(user_from_token):
         return jsonify({"message": "bad_request"}), 400
     except Exception as e:
         print("Exception", e)
-        return jsonify({"message": "internal_server_error"}), 500
+        return jsonify({"message": "error"}), 500
 
 
 @app.route('/api/user/<uid>/posts', methods=["GET"])
@@ -263,10 +263,14 @@ def api_posts_get(uid, user_from_token):
 @app.route('/api/post/<pid>', methods=["GET"])
 @validate_token
 def api_post_get(pid, user_from_token):
-    post = Post.query.filter(Post.id == int(pid)).first()
-    if post:
-        return post_schema.jsonify(post)
-    return jsonify({"status": "not_found"}), 404
+    try:
+        post = Post.query.filter(Post.id == int(pid)).first()
+        if post:
+            return post_schema.jsonify(post)
+        return jsonify({"status": "not_found"}), 404
+    except Exception as e:
+        print(e)
+        return {"status": "error"}, 500
 
 
 @app.route("/api/post/update-pic/<pid>", methods=["PUT"])
@@ -282,32 +286,37 @@ def api_post_update_pic(pid, user_from_token):
             post.imageUrl = os.path.join(app.config['UPLOADS_DIR'] + "post_thumbs", s_fname)
             db.session.add(post)
             db.session.commit()
-            return jsonify({"message": "file_saved"})
-        return jsonify({"message": "unauthorized"})
-    except Exception as e:
+            return jsonify({"message": "file_saved"}), 201
+        return jsonify({"message": "unauthorized"}), 401
+    except ValidationError as e:
         print(e)
         return jsonify({"message": "bad_request"}), 400
+    except Exception as e:
+        print(e)
+        return jsonify({"message": "error"}), 500
 
 
-@app.route("/api/post/<pid>/update", methods=["PUT"])
+@app.route("/api/post/<pid>", methods=["PUT"])
 @validate_token
 def api_post_update(pid, user_from_token):
     try:
         data_from_request = request.json
         if data_from_request["title"] and data_from_request["description"]:
             post = Post.query.filter(Post.id == int(pid)).first()
-            post.title = data_from_request["title"]
-            post.description = data_from_request["description"]
-            db.session.add(post)
-            db.session.commit()
-            return {"message": "post_updated", "post": post_schema.dump(post)}, 201
+            if post.author == user_from_token:
+                post.title = data_from_request["title"]
+                post.description = data_from_request["description"]
+                db.session.add(post)
+                db.session.commit()
+                return {"message": "post_updated", "post": post_schema.dump(post)}, 201
+            return jsonify({"message": "unauthorized"}), 401
         return jsonify({"message": "bad_request"}), 400
     except Exception as e:
         print(e)
         return {"message": "error"}, 500
 
 
-@app.route("/api/post/<pid>/delete", methods=["DELETE"])
+@app.route("/api/post/<pid>", methods=["DELETE"])
 @validate_token
 def api_post_delete(pid, user_from_token):
     try:
@@ -366,7 +375,7 @@ def api_comment_create(pid, user_from_token):
         return {"message": "error"}, 500
 
 
-@app.route("/api/comment/delete/<cid>", methods=["DELETE"])
+@app.route("/api/comment/<cid>", methods=["DELETE"])
 @validate_token
 def api_comment_delete(cid, user_from_token):
     try:

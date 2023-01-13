@@ -40,7 +40,7 @@ paths:
               schema:
                 type: object
                 example: { "message": "error" }
-  /user/signup:
+  /user:
     post:
       summary: "Creates a new user"
       requestBody:
@@ -66,7 +66,7 @@ paths:
                     "username": "Natalie Portman2"
                   }
                 }
-        '400':
+        '400': # status code
           description: "A JSON object with the message bad request"
           content:
             application/json:
@@ -81,7 +81,7 @@ paths:
               schema:
                 type: object
                 example: { "message": "error" }
-  /user/update:
+
     put:
       summary: "Updates a user"
       requestBody:
@@ -102,14 +102,14 @@ paths:
           schema:
             type: string
       responses:
-        '201':
+        '201': # status code
           description: "A JSON object with updated user details"
           content:
             application/json:
               schema:
                 type: object
                 example: { "message": "user_updated" }
-        '400':
+        '400': # status code
           description: "A JSON object with the message unauthorized"
           content:
             application/json:
@@ -124,7 +124,7 @@ paths:
               schema:
                 type: object
                 example: { "message": "error" }
-  /user/delete:
+
     delete:
       summary: "Deletes a user"
       requestBody:
@@ -143,14 +143,14 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        '200': # status code
           description: "A JSON object with the message 'user deleted'"
           content:
             application/json:
               schema:
                 type: object
                 example: { "message": "user_updated" }
-        '400':
+        '400': # status code
           description: "A JSON object with the message unauthorized"
           content:
             application/json:
@@ -158,7 +158,7 @@ paths:
                 type: object
                 example:
                   { "message": "unauthorized" }
-        '404':
+        '404': # status code
           description: "A JSON object with the message not found"
           content:
             application/json:
@@ -174,7 +174,7 @@ paths:
                 type: object
                 example: { "message": "error" }
 
-  /user/update-profile-pic:
+  /user/profile-pic:
     put:
       summary: "uploads an image file. updates profile picture of a user"
       consumes:
@@ -201,14 +201,14 @@ paths:
             type: string
 
       responses:
-        '200':
+        '200': # status code
           description: "A JSON object with the message 'file saved'"
           content:
             application/json:
               schema:
                 type: object
                 example: { "message": "file_saved" }
-        '400':
+        '400': # status code
           description: "A JSON object with the message bad request"
           content:
             application/json:
@@ -236,17 +236,19 @@ paths:
             type: string
 
       responses:
-        '200':
+        '200': # status code
           description: "A JSON object with token"
           content:
             application/json:
               schema:
                 type: object
                 example: {
-                  "status": "login_success",
-                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI5JkpXVCJ9.eyJ1c2VyX2lkIjo0LCJleHAiOjE2NzYxNDM1ODB9.Och10J4X-e2TmxsGW_mLfXwHOymfACM9XDX-U0Bbv7s"
+                  "email": "kate@email.com",
+                  "id": 2,
+                  "imageUrl": "static/uploads/user_thumbs/2.webp",
+                  "username": "Kate Winslte"
                 }
-        '404':
+        '404': # status code
           description: "A JSON object with the message not found"
           content:
             application/json:
@@ -268,7 +270,7 @@ paths:
                 "password": "mysupersecretpassword"
               }
       responses:
-        '200':
+        '200': # status code
           description: "A JSON object with token"
           content:
             application/json:
@@ -278,7 +280,7 @@ paths:
                   "status": "login_success",
                   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI5JkpXVCJ9.eyJ1c2VyX2lkIjo0LCJleHAiOjE2NzYxNDM1ODB9.Och10J4X-e2TmxsGW_mLfXwHOymfACM9XDX-U0Bbv7s"
                 }
-        '400':
+        '400': # status code
           description: "A JSON object with the message invalid data"
           content:
             application/json:
@@ -286,3 +288,580 @@ paths:
                 type: object
                 example:
                   { "message": "ivalid_data" }
+  /user/follow-unfollow/{userId}:
+    post:
+      summary: "follow or unfollow a user"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "ID of the user to be followed or unfollowed"
+          schema:
+            type: integer
+
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200': # status code
+          description: "A JSON object with message followed or unfollowed"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "unfollowed" }
+        '404': # status code
+          description: "A JSON object with the message not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "not_found" }
+        '500': # status code
+          description: A JSON object with message "error"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+
+  /post:
+    post:
+      summary: "creates a new post"
+      parameters:
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: "A JSON object with created post details"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "post": {
+                    "archived": false,
+                    "author": {
+                      "email": "natalie@email.com",
+                      "id": 4,
+                      "imageUrl": "static/uploads/user_thumbs/pro_img1.png",
+                      "username": "111Natalie Portman"
+                    },
+                    "description": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+                    "id": 8,
+                    "imageUrl": "static/uploads/post_thumbs/default_post.png",
+                    "time_created": "2023-01-13T06:17:20",
+                    "title": "Natalie's Post 1"
+                  }
+                }
+        '400': # status code
+          description: "A JSON object with the message bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "bad_request" }
+        '500': # status code
+          description: A JSON object with message "error"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+
+  /post/update-pic/{postId}:
+    put:
+      summary: "uploads an image file. updates post's pic"
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          description: The file to upload.
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '201': # status code
+          description: "A JSON object with the message 'file saved'"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "file_saved" }
+        '400': # status code
+          description: "A JSON object with the message bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "bad_request" }
+        '401': # status code
+          description: "A JSON object with the message unauthorized"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "unauthorized" }
+        '500': # status code
+          description: "A JSON object with message 'error'"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+
+  /post/{postId}:
+    get:
+      summary: "get details of a single post"
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          description: "Post ID"
+          schema:
+            type: integer
+
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200': # status code
+          description: "A JSON object with post details"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "archived": false,
+                  "author": {
+                    "email": "emma@email.com",
+                    "id": 1,
+                    "imageUrl": "static/uploads/user_thumbs/1.jpg",
+                    "username": "Emma Watson"
+                  },
+                  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                  "id": 3,
+                  "imageUrl": "static/uploads/post_thumbs/3.jpg",
+                  "time_created": "2023-01-09T17:16:27",
+                  "title": "Emma's Post 1"
+                }
+        '404': # status code
+          description: "A JSON object with the message not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "not_found" }
+        '500': # status code
+          description: A JSON object with message "error"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+    put:
+      summary: "Updates a post"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example: {
+                "title": "Natalie's Updated Post",
+                "description": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum "
+              }
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          description: "User ID"
+          schema:
+            type: integer
+
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '201': # status code
+          description: "A JSON object with updated post details"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "message": "post_updated",
+                  "post": {
+                    "archived": false,
+                    "author": {
+                      "email": "natalie@email.com",
+                      "id": 4,
+                      "imageUrl": "static/uploads/user_thumbs/pro_img1.png",
+                      "username": "Natalie Portman"
+                    },
+                    "description": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+                    "id": 8,
+                    "imageUrl": "static/uploads/post_thumbs/default_post.png",
+                    "time_created": "2023-01-13T06:17:20",
+                    "title": "Natalie's Post................. 1"
+                  }
+                }
+        '400': # status code
+          description: "A JSON object with the message bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "bad_request" }
+        '401': # status code
+          description: "A JSON object with the message unauthorized"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "unauthorized" }
+        '500': # status code
+          description: A JSON object with message "error"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+
+    delete:
+      summary: "Deletes a specified post"
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          description: "User ID"
+          schema:
+            type: integer
+
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200': # status code
+          description: "A JSON object with the message 'post deleted'"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "post_deleted" }
+        '400': # status code
+          description: "A JSON object with the message unauthorized"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "unauthorized" }
+        '404': # status code
+          description: "A JSON object with the message not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "not_found" }
+        '500': # status code
+          description: A JSON object with message "error"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+
+
+  /post/{postId}/like:
+    post:
+      summary: "Likes or unlike a specified post"
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          description: "User ID"
+          schema:
+            type: integer
+
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200': # status code
+          description: "A JSON object with the message 'post liked' or 'post unliked'"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "post_liked" }
+        '404': # status code
+          description: "A JSON object with the message not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "not_found" }
+        '500': # status code
+          description: "A JSON object with message 'error'"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+
+  /post/{postId}/comment:
+    post:
+      summary: "creates a new post"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example: {
+                "comment": "Hey, Awesome Post..........."
+              }
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          description: "User ID"
+          schema:
+            type: integer
+
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: "A JSON object with created comment details"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "comment": {
+                    "author_id": 4,
+                    "comment": "Hey, Awesome Post...........",
+                    "id": 5,
+                    "post_id": 1
+                  },
+                  "message": "comment_posted"
+                }
+        '400': # status code
+          description: "A JSON object with the message bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "bad_request" }
+        '404': # status code
+          description: "A JSON object with the message not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "not_found" }
+        '500': # status code
+          description: A JSON object with message "error"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+
+  /comment/{commentId}:
+    put:
+      summary: "Updates a comment"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example: {
+                "comment": "modified comment"
+              }
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          description: "Comment ID"
+          schema:
+            type: integer
+
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '201': # status code
+          description: "A JSON object with updated comment details"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "comment": {
+                    "author_id": 4,
+                    "comment": "modified comment",
+                    "id": 4,
+                    "post_id": 1
+                  },
+                  "message": "comment_updated"
+                }
+        '400': # status code
+          description: "A JSON object with the message bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "bad_request" }
+        '401': # status code
+          description: "A JSON object with the message unauthorized"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "unauthorized" }
+        '500': # status code
+          description: A JSON object with message "error"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+
+    delete:
+      summary: "Deletes a specified comment. Comment should be made by the user or it should be in a post made by the user"
+      parameters:
+        - name: comment
+          in: path
+          required: true
+          description: "Comment ID"
+          schema:
+            type: integer
+
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200': # status code
+          description: "A JSON object with the message 'comment deleted'"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "comment_deleted" }
+        '400': # status code
+          description: "A JSON object with the message unauthorized"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "unauthorized" }
+        '404': # status code
+          description: "A JSON object with the message not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "not_found" }
+        '500': # status code
+          description: "A JSON object with message 'error'"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
+
+  /comment/{commentId}/like:
+    post:
+      summary: "Likes or unlike a specified comment"
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          description: "Comment ID"
+          schema:
+            type: integer
+
+        - name: x-token
+          in: header
+          description: "jwt token"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200': # status code
+          description: "A JSON object with the message 'comment liked' or 'comment unliked'"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "comment_liked" }
+        '404': # status code
+          description: "A JSON object with the message not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  { "message": "not_found" }
+        '500': # status code
+          description: "A JSON object with message 'error'"
+          content:
+            application/json:
+              schema:
+                type: object
+                example: { "message": "error" }
