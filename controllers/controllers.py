@@ -31,14 +31,16 @@ def load_user(user_id):
 
 
 class LoginForm(FlaskForm):
-    email = EmailField("username", validators=[InputRequired()])
-    password = PasswordField("username", validators=[InputRequired(), Length(min=8, max=64)])
+    email = EmailField("username", validators=[InputRequired()], render_kw={"placeholder": "Email"})
+    password = PasswordField("username", validators=[InputRequired(), Length(min=8, max=64)],
+                             render_kw={"placeholder": "Password"})
 
 
 class SignupForm(FlaskForm):
     email = EmailField("email", validators=[InputRequired()], render_kw={"placeholder": "Email"})
     name = StringField("name", validators=[InputRequired(), Length(min=8, max=64)], render_kw={"placeholder": "Name"})
-    password = PasswordField("password", validators=[InputRequired(), Length(min=8, max=64)])
+    password = PasswordField("password", validators=[InputRequired(), Length(min=8, max=64)],
+                             render_kw={"placeholder": "Password"})
     imageUrl = FileField()
 
 
