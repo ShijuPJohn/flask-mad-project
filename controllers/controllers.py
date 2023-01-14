@@ -2,12 +2,9 @@ import datetime
 import os
 import time
 
-import jwt
-import werkzeug
-from flask import render_template, redirect, request, jsonify
+from flask import render_template, redirect, request
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
 from flask_marshmallow import Marshmallow
-from flask_restful import reqparse
 from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -314,7 +311,6 @@ def post_details_get(pid):
     formatted_time = localtime.strftime("%d-%B-%Y, %I:%M %p")
     form = CommentForm()
     comment_time_obj = {}
-    print(type(post.comments))
     if post.comments:
         for comment in post.comments:
             now_timestamp = time.time()
@@ -364,7 +360,6 @@ def create_comment_post2():
     body_data = request.get_json()
     comment_body = body_data["commentBody"]
     pid = body_data["postID"]
-    print(comment_body, pid)
     if len(comment_body) > 0:
         comment = Comment(comment=comment_body, author_id=current_user.id, post_id=int(pid))
         db.session.add(comment)
@@ -530,8 +525,6 @@ def user_followers_get(uid):
 @login_required
 def user_followees_get(uid):
     user = User.query.filter(User.id == uid).first()
-    print(user)
-    print(user.follows)
     users = user.follows
     return render_template("users.html", users=users, title=f"{user.username}'s Followees")
 
@@ -542,7 +535,6 @@ def users_all_posts_get(uid):
     time_obj = {}
     user = User.query.filter(User.id == int(uid)).first()
     posts = list(filter(lambda x: not x.archived, list(user.posts)))
-    print(posts)
     for post in posts:
         now_timestamp = time.time()
         offset = datetime.datetime.fromtimestamp(now_timestamp) - datetime.datetime.utcfromtimestamp(now_timestamp)
